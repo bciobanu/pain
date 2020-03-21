@@ -95,15 +95,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
-	atomic.AddUint64(&status.NumRequests, 1)
-
+	encoder := getEncoder(w, r)
 	cookie, err := r.Cookie("token")
 	if err != nil {
 		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
+			encoder.Encode(Error{Error: "Unauthorized"})
 			return
 		}
-		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(Error{Error: "Bad request"})
 		return
 	}
 
@@ -112,10 +111,10 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		return config.JwtKey, nil
 	})
 	if err == jwt.ErrSignatureInvalid || !token.Valid {
-		w.WriteHeader(http.StatusUnauthorized)
+		encoder.Encode(Error{Error: "Unauthorized"})
 		return
 	} else if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(Error{Error: "Bad request"})
 		return
 	}
 
@@ -130,7 +129,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	newTokenString, err := newToken.SignedString(config.JwtKey)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		encoder.Encode(Error{Error: "JWT creation error"})
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
