@@ -92,7 +92,52 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Value:   tokenString,
 		Expires: expirationTime,
 	})
-	encoder.Encode(claim) // TODO: do we actually need to send this?
+}
+
+func Refresh(w http.ResponseWriter, r *http.Request) {
+	atomic.AddUint64(&status.NumRequests, 1)
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	tokenString, claim := cookie.Value, &Claim{}
+	token, err := jwt.ParseWithClaims(tokenString, claim, func(token *jwt.Token) (interface{}, error) {
+		return config.JwtKey, nil
+	})
+	if err == jwt.ErrSignatureInvalid || !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	} else if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	const AfterExpiryTimeout = 30 * time.Second
+	if time.Unix(claim.ExpiresAt, 0).Sub(time.Now()) > AfterExpiryTimeout {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	expirationTime := time.Now().Add(config.JwtTimeout)
+	claim.ExpiresAt = expirationTime.Unix()
+	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+	newTokenString, err := newToken.SignedString(config.JwtKey)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   newTokenString,
+		Expires: expirationTime,
+	})
 }
 
 func main() {
@@ -106,5 +151,6 @@ func main() {
 	router.HandleFunc("/status", GetStatus).Methods("GET")
 	router.HandleFunc("/register", Register).Methods("POST")
 	router.HandleFunc("/login", Login).Methods("POST")
+	router.HandleFunc("/entries", Refresh).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
