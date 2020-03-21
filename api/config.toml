@@ -1,0 +1,3 @@
+[[Configuration]]
+JwtKey = "abc123"
+JwtTimeout = "30m"
