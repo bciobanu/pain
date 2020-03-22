@@ -17,6 +17,7 @@ type Painting struct {
 	UserName string
 	Owner    User `gorm:"foreignkey:UserName"`
 
+	ID          uint `gorm:"primary_key"`
 	Name        string
 	Artist      string
 	Year        time.Time
