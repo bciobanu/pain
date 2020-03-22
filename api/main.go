@@ -5,6 +5,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 	"log"
 	"net/http"
 	"sync/atomic"
@@ -13,7 +14,15 @@ import (
 
 type Configuration struct {
 	JwtKey     string
-	JwtTimeout time.Duration
+	JwtTimeout uint32
+
+	DB struct {
+		Host string
+		Port uint32
+		Name string
+		User string
+		Pass string
+	}
 }
 
 type Status struct {
@@ -36,6 +45,7 @@ type Error struct {
 
 var config Configuration
 var status Status
+var db *gorm.DB
 
 func getEncoder(w http.ResponseWriter, r *http.Request) *json.Encoder {
 	w.Header().Set("Content-Type", "application/json")
@@ -74,7 +84,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: check credentials
 
-	expirationTime := time.Now().Add(config.JwtTimeout)
+	expirationTime := time.Now().Add(time.Duration(config.JwtTimeout) * time.Minute)
 	claim := &Claim{
 		Name: credentials.Name,
 		StandardClaims: jwt.StandardClaims{
@@ -124,7 +134,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expirationTime := time.Now().Add(config.JwtTimeout)
+	expirationTime := time.Now().Add(time.Duration(config.JwtTimeout) * time.Minute)
 	claim.ExpiresAt = expirationTime.Unix()
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	newTokenString, err := newToken.SignedString(config.JwtKey)
@@ -141,10 +151,11 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	if _, err := toml.DecodeFile("config.toml", &config); err != nil {
-		log.Fatal("Could not parse config file")
+		log.Fatal(err)
 		return
 	}
 	status = Status{}
+	db = initDatabase()
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/status", GetStatus).Methods("GET")

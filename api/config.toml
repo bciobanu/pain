@@ -1,3 +1,9 @@
-[[Configuration]]
 JwtKey = "abc123"
-JwtTimeout = "30m"
+JwtTimeout = 10
+
+[DB]
+Host = "127.0.0.1"
+Port = 5432
+Name = "pain_api"
+User = "postgres"
+Pass = "postgres"
