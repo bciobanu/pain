@@ -273,6 +273,22 @@ func UploadPainting(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetPaintings(w http.ResponseWriter, r *http.Request) {
+	encoder := getEncoder(w, r)
+	claim, err := getCredentials(r)
+	if err != nil {
+		encoder.Encode(Error{Error: err.Error()})
+		return
+	}
+	var paintings *[]Painting
+	if err := db.Where("username = ?", claim.Name).Find(&paintings).Error; err != nil {
+		log.Fatal(err)
+		encoder.Encode(Error{Error: "Internal DB error"})
+		return
+	}
+	encoder.Encode(paintings)
+}
+
 func main() {
 	if _, err := toml.DecodeFile("config.toml", &config); err != nil {
 		log.Fatal(err)
@@ -287,5 +303,6 @@ func main() {
 	router.HandleFunc("/login", Login).Methods("POST")
 	router.HandleFunc("/refresh", Refresh).Methods("POST")
 	router.HandleFunc("/upload-painting", UploadPainting).Methods("POST")
+	router.HandleFunc("/paintings", GetPaintings).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
