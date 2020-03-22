@@ -27,7 +27,8 @@ type Configuration struct {
 }
 
 type Status struct {
-	NumRequests uint64 `json:"numRequests"`
+	Requests     uint64 `json:"requests"`
+	TokensIssued uint64 `json:"tokensIssued"`
 }
 
 type Credentials struct {
@@ -51,7 +52,7 @@ var db *gorm.DB
 func getEncoder(w http.ResponseWriter, r *http.Request) *json.Encoder {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
-	atomic.AddUint64(&status.NumRequests, 1)
+	atomic.AddUint64(&status.Requests, 1)
 	return json.NewEncoder(w)
 }
 
@@ -73,6 +74,7 @@ func issueToken(w http.ResponseWriter, user string) {
 		log.Fatal("Could not issue JWT token")
 		return
 	}
+	atomic.AddUint64(&status.TokensIssued, 1)
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
@@ -106,7 +108,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(Error{Error: "User already exists"})
 		return
 	}
-
 	issueToken(w, registerData.Name)
 }
 
@@ -175,6 +176,6 @@ func main() {
 	router.HandleFunc("/status", GetStatus).Methods("GET")
 	router.HandleFunc("/register", Register).Methods("POST")
 	router.HandleFunc("/login", Login).Methods("POST")
-	router.HandleFunc("/entries", Refresh).Methods("POST")
+	router.HandleFunc("/refresh", Refresh).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
