@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"log"
 	_ "github.com/lib/pq"
+	"log"
 )
 
 type User struct {

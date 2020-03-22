@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"sync/atomic"
@@ -58,6 +59,27 @@ func GetStatus(w http.ResponseWriter, r *http.Request) {
 	getEncoder(w, r).Encode(status)
 }
 
+func issueToken(w http.ResponseWriter, user string) {
+	expirationTime := time.Now().Add(time.Duration(config.JwtTimeout) * time.Minute)
+	claim := &Claim{
+		Name: user,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+	tokenString, err := token.SignedString([]byte(config.JwtKey))
+	if err != nil {
+		log.Fatal("Could not issue JWT token")
+		return
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
+	})
+}
+
 func Register(w http.ResponseWriter, r *http.Request) {
 	encoder := getEncoder(w, r)
 	var registerData Credentials
@@ -66,11 +88,26 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(Error{Error: "Could not parse request JSON"})
 		return
 	}
-
-	responseError := Error{
-		Error: "Not implemented error",
+	if len(registerData.Name) == 0 || len(registerData.Password) == 0 {
+		encoder.Encode(Error{Error: "Invalid data"})
+		return
 	}
-	encoder.Encode(responseError)
+
+	passHash, err := bcrypt.GenerateFromPassword([]byte(registerData.Password), 10)
+	if err != nil {
+		encoder.Encode(Error{Error: "Internal error, could not encrypt password"})
+		return
+	}
+	dbUser := &User{
+		Name:     registerData.Name,
+		Passhash: string(passHash),
+	}
+	if err := db.Create(dbUser).Error; err != nil {
+		encoder.Encode(Error{Error: "User already exists"})
+		return
+	}
+
+	issueToken(w, registerData.Name)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -82,26 +119,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: check credentials
-
-	expirationTime := time.Now().Add(time.Duration(config.JwtTimeout) * time.Minute)
-	claim := &Claim{
-		Name: credentials.Name,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-	tokenString, err := token.SignedString([]byte(config.JwtKey))
-	if err != nil {
-		encoder.Encode(Error{Error: "JWT creation error"})
+	var user User
+	if err := db.Where("name = ?", credentials.Name).First(&user).Error; err != nil {
+		encoder.Encode(Error{Error: "Invalid username"})
 		return
 	}
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-	})
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Passhash), []byte(credentials.Password)); err != nil {
+		encoder.Encode(Error{Error: "Invalid password"})
+		return
+	}
+	issueToken(w, credentials.Name)
 }
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
@@ -130,23 +157,10 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 	const AfterExpiryTimeout = 30 * time.Second
 	if time.Unix(claim.ExpiresAt, 0).Sub(time.Now()) > AfterExpiryTimeout {
-		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(Error{Error: "Bad request"})
 		return
 	}
-
-	expirationTime := time.Now().Add(time.Duration(config.JwtTimeout) * time.Minute)
-	claim.ExpiresAt = expirationTime.Unix()
-	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-	newTokenString, err := newToken.SignedString(config.JwtKey)
-	if err != nil {
-		encoder.Encode(Error{Error: "JWT creation error"})
-		return
-	}
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   newTokenString,
-		Expires: expirationTime,
-	})
+	issueToken(w, claim.Name)
 }
 
 func main() {
