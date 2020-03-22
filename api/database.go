@@ -5,11 +5,26 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 	"log"
+	"time"
 )
 
 type User struct {
 	Name     string
 	Passhash string
+}
+
+type Painting struct {
+	UserName string
+	Owner    User `gorm:"foreignkey:UserName"`
+
+	Name        string
+	Artist      string
+	Year        time.Time
+	Medium      string
+	CreatedAt   time.Time
+	Description string
+	ImagePath   string
+	Hits        uint32
 }
 
 func initDatabase() *gorm.DB {
@@ -24,6 +39,7 @@ func initDatabase() *gorm.DB {
 		if err == nil {
 			log.Println("Connected to DB..")
 			db.AutoMigrate(User{})
+			db.AutoMigrate(Painting{})
 			log.Println("Finished running migrations")
 			return db
 		} else {

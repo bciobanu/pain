@@ -3,12 +3,18 @@ package main
 import (
 	"encoding/json"
 	"github.com/BurntSushi/toml"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+
+	"errors"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"path/filepath"
+	"strings"
 	"sync/atomic"
 	"time"
 )
@@ -60,7 +66,7 @@ func GetStatus(w http.ResponseWriter, r *http.Request) {
 	getEncoder(w, r).Encode(status)
 }
 
-func issueToken(w http.ResponseWriter, user string) {
+func issueToken(user string) (*http.Cookie, error) {
 	expirationTime := time.Now().Add(time.Duration(config.JwtTimeout) * time.Minute)
 	claim := &Claim{
 		Name: user,
@@ -72,14 +78,41 @@ func issueToken(w http.ResponseWriter, user string) {
 	tokenString, err := token.SignedString([]byte(config.JwtKey))
 	if err != nil {
 		log.Fatal("Could not issue JWT token")
-		return
+		return nil, errors.New("Could not issue JWT token")
 	}
 	atomic.AddUint64(&status.TokensIssued, 1)
-	http.SetCookie(w, &http.Cookie{
+	return &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
 		Expires: expirationTime,
+	}, nil
+}
+
+func getCredentials(r *http.Request) (*Claim, error) {
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			return nil, errors.New("Unauthorized")
+		}
+		return nil, errors.New("Bad request")
+	}
+
+	tokenString, claim := cookie.Value, &Claim{}
+	token, err := jwt.ParseWithClaims(tokenString, claim, func(token *jwt.Token) (interface{}, error) {
+		return config.JwtKey, nil
 	})
+	if err == jwt.ErrSignatureInvalid || !token.Valid {
+		return nil, errors.New("Unauthorized")
+	}
+	if err != nil {
+		return nil, errors.New("Bad request")
+	}
+
+	const AfterExpiryTimeout = 30 * time.Second
+	if time.Unix(claim.ExpiresAt, 0).Sub(time.Now()) > AfterExpiryTimeout {
+		return nil, errors.New("Bad request")
+	}
+	return claim, nil
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -108,7 +141,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(Error{Error: "User already exists"})
 		return
 	}
-	issueToken(w, registerData.Name)
+
+	token, err := issueToken(registerData.Name)
+	if err != nil {
+		encoder.Encode(Error{Error: err.Error()})
+		return
+	}
+	http.SetCookie(w, token)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -129,39 +168,109 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(Error{Error: "Invalid password"})
 		return
 	}
-	issueToken(w, credentials.Name)
+	token, err := issueToken(credentials.Name)
+	if err != nil {
+		encoder.Encode(Error{Error: err.Error()})
+		return
+	}
+	http.SetCookie(w, token)
 }
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
 	encoder := getEncoder(w, r)
-	cookie, err := r.Cookie("token")
+	claim, err := getCredentials(r)
 	if err != nil {
-		if err == http.ErrNoCookie {
-			encoder.Encode(Error{Error: "Unauthorized"})
-			return
-		}
-		encoder.Encode(Error{Error: "Bad request"})
+		encoder.Encode(Error{Error: err.Error()})
+		return
+	}
+	token, err := issueToken(claim.Name)
+	if err != nil {
+		encoder.Encode(Error{Error: err.Error()})
+		return
+	}
+	http.SetCookie(w, token)
+}
+
+func isAllowedImageExtension(extension string) bool {
+	switch extension {
+	case
+		"jpg",
+		"jpeg",
+		"png":
+		return true
+	}
+	return false
+}
+
+func uploadImage(r *http.Request) (*string, error) {
+	image, header, err := r.FormFile("image")
+	if err != nil {
+		return nil, errors.New("Invalid image")
+	}
+	defer image.Close()
+	extension := strings.TrimSuffix(header.Filename, filepath.Ext(header.Filename))
+	if !isAllowedImageExtension(extension) {
+		return nil, errors.New("Invalid image extension")
+	}
+
+	imageData, err := ioutil.ReadAll(image)
+	if err != nil {
+		return nil, errors.New("Could not read image data")
+	}
+
+	imageFile, err := ioutil.TempFile("images", "*."+extension)
+	imageFileName := imageFile.Name()
+	if err != nil {
+		log.Fatal(err)
+		return nil, errors.New("Internal server error")
+	}
+	defer imageFile.Close()
+	if _, err := imageFile.Write(imageData); err != nil {
+		log.Fatal(err)
+		return nil, errors.New("Internal server error")
+	}
+	return &imageFileName, nil
+}
+
+func UploadPainting(w http.ResponseWriter, r *http.Request) {
+	encoder := getEncoder(w, r)
+	claim, err := getCredentials(r)
+	if err != nil {
+		encoder.Encode(Error{Error: err.Error()})
 		return
 	}
 
-	tokenString, claim := cookie.Value, &Claim{}
-	token, err := jwt.ParseWithClaims(tokenString, claim, func(token *jwt.Token) (interface{}, error) {
-		return config.JwtKey, nil
-	})
-	if err == jwt.ErrSignatureInvalid || !token.Valid {
-		encoder.Encode(Error{Error: "Unauthorized"})
-		return
-	} else if err != nil {
-		encoder.Encode(Error{Error: "Bad request"})
+	const MaxParseMemory = 32 << 20 // 32 mb
+	if err := r.ParseMultipartForm(MaxParseMemory); err != nil {
+		encoder.Encode(Error{Error: "Could not parse request"})
 		return
 	}
 
-	const AfterExpiryTimeout = 30 * time.Second
-	if time.Unix(claim.ExpiresAt, 0).Sub(time.Now()) > AfterExpiryTimeout {
-		encoder.Encode(Error{Error: "Bad request"})
+	year, err := time.Parse(r.FormValue("Year"), "YYYY")
+	if err != nil {
+		encoder.Encode(Error{Error: "Bad year formatting"})
 		return
 	}
-	issueToken(w, claim.Name)
+	imagePath, err := uploadImage(r)
+	if err != nil {
+		encoder.Encode(Error{Error: err.Error()})
+		return
+	}
+
+	painting := &Painting{
+		UserName:    claim.Name,
+		Name:        r.FormValue("Name"),
+		Artist:      r.FormValue("Artist"),
+		Year:        year,
+		Medium:      r.FormValue("Medium"),
+		CreatedAt:   time.Now().UTC(),
+		Description: r.FormValue("Description"),
+		ImagePath:   *imagePath,
+	}
+	if err := db.Create(painting).Error; err != nil {
+		encoder.Encode(Error{Error: "Could not save painting"})
+		return
+	}
 }
 
 func main() {
@@ -177,5 +286,6 @@ func main() {
 	router.HandleFunc("/register", Register).Methods("POST")
 	router.HandleFunc("/login", Login).Methods("POST")
 	router.HandleFunc("/refresh", Refresh).Methods("POST")
+	router.HandleFunc("/upload-painting", UploadPainting).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
