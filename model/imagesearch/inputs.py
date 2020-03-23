@@ -19,7 +19,8 @@ class ImageFolderWithPaths(data.Dataset):
 
     def __getitem__(self, index):
         filename = self.imgs[index]
-        img = Image.open(os.path.join(self.root, filename))
+        img = Image.open(os.path.join(self.root, filename)).convert("RGB")
+
         if self.transform is not None:
             img = self.transform(img)
         return img, filename
