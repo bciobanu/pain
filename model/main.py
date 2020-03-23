@@ -78,6 +78,9 @@ def main():
         writer.add_scalars('Loss', {'train': train_loss,
                                    'validation': validation_loss}, epoch)
 
+    it = iter(train_loader)
+    images, _ = it.__next__()
+    writer.add_graph(model, images.cuda())
     writer.close()
 
 
