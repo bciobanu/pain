@@ -6,6 +6,7 @@ import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.utils.tensorboard import SummaryWriter
 from imagesearch.model import Autoencoder
 from imagesearch.inputs import load_data
 from imagesearch.util import save_checkpoint
@@ -27,6 +28,7 @@ parser.add_argument('--test', dest='test', action='store_true', help='evaluate m
 
 def main():
     args = parser.parse_args()
+    writer = SummaryWriter()
 
     best_loss = float("Inf")
     model = Autoencoder().cuda()
@@ -63,16 +65,20 @@ def main():
         return
 
     for epoch in range(args.start_epoch, args.epochs):
-        train(train_loader, model, criterion, optimizer, epoch, args.print_freq)
-        loss = validate(val_loader, model, criterion, args.print_freq)
-        is_best = loss < best_loss
-        best_loss = min(best_loss, loss)
+        train_loss = train(train_loader, model, criterion, optimizer, epoch, args.print_freq)
+        validation_loss = validate(val_loader, model, criterion, args.print_freq)
+        is_best = validation_loss < best_loss
+        best_loss = min(best_loss, validation_loss)
         save_checkpoint({
             'epoch': epoch + 1,
             'state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
             'best_loss': best_loss,
         }, is_best)
+        writer.add_scalars('Loss', {'train': train_loss,
+                                   'validation': validation_loss}, epoch)
+
+    writer.close()
 
 
 if __name__ == "__main__":

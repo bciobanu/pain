@@ -43,6 +43,7 @@ def train(train_loader, model, criterion, optimizer, epoch, print_freq):
                   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
                   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(
                     epoch, i + 1, len(train_loader), batch_time=batch_time, data_time=data_time, loss=losses))
+    return losses.avg
 
 
 def validate(val_loader, model, criterion, print_freq):

@@ -1,4 +1,5 @@
 model/data*
 model/.idea
 model/*.pth
+model/runs
 __pycache__/
