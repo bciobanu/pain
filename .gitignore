@@ -1,2 +1,4 @@
-model/data
+model/data*
 model/.idea
+model/*.pth
+__pycache__/
