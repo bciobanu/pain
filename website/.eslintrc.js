@@ -4,9 +4,10 @@ module.exports = {
         ecmaVersion: 2017,
     },
     env: {
+        amd: true,
         browser: true,
         es6: true,
-        webextensions: true,
+        node: true,
     },
     extends: "eslint:recommended",
 };

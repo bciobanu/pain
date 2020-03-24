@@ -5,6 +5,6 @@ app.on("#", (route, ...p) => {
     app.run(`#/${route || ""}`, ...p);
 });
 
-Auth.login({name: "test", password: "bla"});
+Auth.login({name: "bob", password: "zilla"});
 
 //app.run("/get-user");

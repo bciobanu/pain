@@ -36,7 +36,7 @@ export async function fetchAsync(method: "GET" | "POST" | "DELETE" | "PUT", url:
         throw new Error("401");
     }
 
-    const result = await response.json();
+    const result = await response.text().then(text => (text ? JSON.parse(text) : {}));
     if (!response.ok) {
         throw result;
     }
