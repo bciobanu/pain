@@ -1,7 +1,7 @@
 import {app, Component, on} from "apprun";
 
 class LoginComponent extends Component {
-    state = {}
+    state = {};
 
     view = state => {
         return (
@@ -9,9 +9,9 @@ class LoginComponent extends Component {
                 <p>PLM</p>
             </div>
         );
-    }
+    };
 
-    @on("#/login") login = (state) => state;
-};
+    @on("#/login") login = state => state;
+}
 
 export default new LoginComponent().start("pain-app");

@@ -7,7 +7,9 @@ class HeaderComponent extends Component {
         return (
             <nav class="uk-navbar-container uk-margin" uk-navbar>
                 <div class="uk-navbar-left">
-                    <a class="uk-navbar-item uk-logo" href="#">Pain</a>
+                    <a class="uk-navbar-item uk-logo" href="#">
+                        Pain
+                    </a>
                 </div>
                 <div class="uk-navbar-right">
                     <div class="uk-navbar-item">
@@ -17,6 +19,6 @@ class HeaderComponent extends Component {
             </nav>
         );
     };
-};
+}
 
 export default new HeaderComponent().start("header");

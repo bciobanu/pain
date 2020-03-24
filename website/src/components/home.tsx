@@ -2,9 +2,9 @@ import {app, Component, on} from "apprun";
 import {IPainting} from "../models";
 
 declare interface IState {
-    paintings: Array<IPainting>,
-    isLogged: boolean,
-};
+    paintings: Array<IPainting>;
+    isLogged: boolean;
+}
 
 class HomeComponent extends Component {
     state: IState = {
@@ -17,14 +17,14 @@ class HomeComponent extends Component {
             <div>
                 <p>{state.isLogged ? "Plm" : "plt"}</p>
             </div>
-        )
+        );
     };
 
-    updateState = async(state: IState) => {
+    updateState = async (state: IState) => {
         return {...state, isLogged: app["token"]};
-    }
+    };
 
-    @on('#/') root = this.updateState;
-};
+    @on("#/") root = this.updateState;
+}
 
 export default new HomeComponent().start("pain-app");
