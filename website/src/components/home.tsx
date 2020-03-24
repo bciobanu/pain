@@ -1,4 +1,4 @@
-import {app, Component, on, customElement} from "apprun";
+import {app, Component, on} from "apprun";
 import {IPainting} from "../models";
 
 declare interface IState {
@@ -6,7 +6,6 @@ declare interface IState {
     isLogged: boolean,
 };
 
-@customElement("pain-home")
 class HomeComponent extends Component {
     state: IState = {
         paintings: [],
@@ -21,11 +20,11 @@ class HomeComponent extends Component {
         )
     };
 
-    updateState = async(state) => {
+    updateState = async(state: IState) => {
         return {...state, isLogged: app["token"]};
     }
 
-    @on('#/') root = async (state) => await this.updateState(state);
+    @on('#/') root = this.updateState;
 };
 
-export default new HomeComponent().mount("pain-app");
+export default new HomeComponent().start("pain-app");
