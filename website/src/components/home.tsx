@@ -13,11 +13,11 @@ class HomeComponent extends Component {
     };
 
     view = state => {
-        const {isLogged} = state;
+        const {paintings, isLogged} = state;
         if (isLogged) {
             return (
-                <div>
-                    <p>Mare boss</p>
+                <div class="uk-flex uk-flex-center">
+                    <p class="Cabin uk-text-medium">Your paintings will appear here..</p>
                 </div>
             );
         }

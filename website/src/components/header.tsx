@@ -11,6 +11,7 @@ class HeaderComponent extends Component {
                     <a class="uk-navbar-item uk-logo" href="#">
                         Pain
                     </a>
+                    {token && <a class="uk-navbar-item uk-icon" uk-icon="icon: upload" href="#/upload-painting" />}
                 </div>
                 {!token &&
                     <div class="uk-navbar-right">
