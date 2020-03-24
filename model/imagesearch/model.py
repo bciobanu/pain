@@ -16,7 +16,7 @@ class Autoencoder(nn.Module):
             nn.Conv2d(128, 256, 3, stride=2, padding=1),
             nn.ReLU(True),
             nn.Conv2d(256, 512, 3, stride=2, padding=1),
-            nn.ReLU(True)
+            nn.ReLU(True),
         )
         self.decoder = nn.Sequential(
             nn.ConvTranspose2d(512, 512, 3, stride=2, padding=1, output_padding=1),
@@ -30,7 +30,7 @@ class Autoencoder(nn.Module):
             nn.ConvTranspose2d(64, 32, 3, stride=2, padding=1, output_padding=1),
             nn.ReLU(True),
             nn.ConvTranspose2d(32, 3, 3, stride=2, padding=1, output_padding=1),
-            nn.Tanh()
+            nn.Tanh(),
         )
 
     def forward(self, x):

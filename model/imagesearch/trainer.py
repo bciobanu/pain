@@ -1,10 +1,11 @@
 from __future__ import print_function
 
-import time
 import os
+import time
+
+from torchvision.utils import save_image
 
 from imagesearch.util import AverageMeter
-from torchvision.utils import save_image
 
 
 def train(train_loader, model, criterion, optimizer, epoch, print_freq):
@@ -38,11 +39,19 @@ def train(train_loader, model, criterion, optimizer, epoch, print_freq):
         start = time.time()
 
         if i % print_freq == 0:
-            print('Epoch: [{0}][{1}/{2}]\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(
-                    epoch, i + 1, len(train_loader), batch_time=batch_time, data_time=data_time, loss=losses))
+            print(
+                "Epoch: [{0}][{1}/{2}]\t"
+                "Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t"
+                "Data {data_time.val:.3f} ({data_time.avg:.3f})\t"
+                "Loss {loss.val:.4f} ({loss.avg:.4f})\t".format(
+                    epoch,
+                    i + 1,
+                    len(train_loader),
+                    batch_time=batch_time,
+                    data_time=data_time,
+                    loss=losses,
+                )
+            )
     return losses.avg
 
 
@@ -70,12 +79,15 @@ def validate(val_loader, model, criterion, print_freq):
         start = time.time()
 
         if i % print_freq == 0:
-            print('TrainVal: [{0}/{1}]\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(
-                    i + 1, len(val_loader), batch_time=batch_time, loss=losses))
+            print(
+                "TrainVal: [{0}/{1}]\t"
+                "Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t"
+                "Loss {loss.val:.4f} ({loss.avg:.4f})\t".format(
+                    i + 1, len(val_loader), batch_time=batch_time, loss=losses
+                )
+            )
 
-    print(' * Loss {loss.avg:.3f}'.format(loss=losses))
+    print(" * Loss {loss.avg:.3f}".format(loss=losses))
     return losses.avg
 
 
