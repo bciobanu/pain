@@ -17,7 +17,7 @@ class RegisterComponent extends Component {
 
     view = state => {
         const {isLogged} = state;
-        if (isLogged || !!getToken()) {
+        if (isLogged) {
             this.goBack(state);
             return [];
         }

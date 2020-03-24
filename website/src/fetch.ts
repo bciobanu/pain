@@ -1,7 +1,7 @@
 import app from "apprun";
 
-const API_URL = "http://localhost:8080/";
-const TOKEN_KEY = "jwt";
+export const API_URL = "http://localhost:8080/";
+export const TOKEN_KEY = "jwt";
 
 export function getToken() {
     return window?.localStorage.getItem(TOKEN_KEY) || "";
