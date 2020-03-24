@@ -1,8 +1,13 @@
 import {fetchAsync, setToken} from "./fetch";
+import {IPainting} from "./models";
 
 export interface ICredentials {
     name: string;
     password: string;
+}
+
+export interface IPaintingsResponse extends IPainting {
+    userName: string;
 }
 
 export const Auth = {
@@ -10,3 +15,7 @@ export const Auth = {
     register: (user: ICredentials) => fetchAsync("POST", "register", user),
     refresh: () => fetchAsync("POST", "refresh").then(r => r["Value"]).then(setToken),
 };
+
+export const Paintings = {
+    list: () => fetchAsync("GET", "paintings"),
+}
