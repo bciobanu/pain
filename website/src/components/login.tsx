@@ -1,9 +1,9 @@
 import {app, Component, on} from "apprun";
 import {Auth} from "../api";
-import {getToken, serializeObject} from "../fetch";
+import {serializeObject} from "../fetch";
 
 class LoginComponent extends Component {
-    state = {isLogged: false};
+    state = {};
 
     goBack = state => {
         const returnTo: string = (state.returnTo || "").replace(/\#\/register\/?/, "");
@@ -16,11 +16,6 @@ class LoginComponent extends Component {
     }
 
     view = state => {
-        const {isLogged} = state;
-        if (isLogged) {
-            this.goBack(state);
-            return [];
-        }
         return (
             <div id="login" class="uk-flex uk-flex-center">
                 <form onsubmit={e => this.run("auth", e)}>

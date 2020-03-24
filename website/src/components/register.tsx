@@ -3,7 +3,7 @@ import {Auth} from "../api";
 import {getToken, serializeObject} from "../fetch";
 
 class RegisterComponent extends Component {
-    state = {isLogged: false};
+    state = {};
 
     goBack = state => {
         const returnTo: string = (state.returnTo || "").replace(/\#\/register\/?/, "");
@@ -16,11 +16,6 @@ class RegisterComponent extends Component {
     }
 
     view = state => {
-        const {isLogged} = state;
-        if (isLogged) {
-            this.goBack(state);
-            return [];
-        }
         return (
             <div class="uk-flex uk-flex-center">
                 <form onsubmit={e => this.run("register", e)}>
@@ -58,8 +53,6 @@ class RegisterComponent extends Component {
             return {...state, errors};
         }
     };
-
-    @on("token-changed") tokenChanged = (state, token) => ({...state, isLogged: !!token});
 }
 
 export default new RegisterComponent().mount("pain-app");
