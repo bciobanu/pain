@@ -273,7 +273,7 @@ func UploadPainting(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(Error{Error: "Bad year formatting"})
 		return
 	}
-	year := time.Date(int(yearInt), time.January, 0, 0, 0, 0, 0, time.UTC)
+	year := time.Date(int(yearInt), time.February, 0, 0, 0, 0, 0, time.UTC)
 
 	imagePath, err := uploadImage(r)
 	if err != nil {

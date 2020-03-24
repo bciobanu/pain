@@ -15,9 +15,38 @@ class HomeComponent extends Component {
     view = state => {
         const {paintings, isLogged} = state;
         if (isLogged) {
+            let paintingBody = [];
+            for (const painting of paintings) {
+                paintingBody.push(
+                    <tr>
+                        <td>{painting.name}</td>
+                        <td>{painting.artist}</td>
+                        <td>{new Date(painting.year).getFullYear()}</td>
+                        <td>{painting.medium}</td>
+                        <td>{new Date(painting.createdAt).toDateString()}</td>
+                    </tr>
+                );
+            }
+
+            const paintingsTable = paintings.length == 0 ?
+                <p class="Cabin uk-text-medium">Your paintings will appear here..</p> :
+                <table class="uk-table uk-table-hover uk-table-divider">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Artist</th>
+                            <th>Year</th>
+                            <th>Medium</th>
+                            <th>Created at</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         {paintingBody}
+                    </tbody>
+                </table>;
             return (
                 <div class="uk-flex uk-flex-center">
-                    <p class="Cabin uk-text-medium">Your paintings will appear here..</p>
+                    {paintingsTable}
                 </div>
             );
         }
@@ -30,6 +59,8 @@ class HomeComponent extends Component {
     }
 
     @on("#/") root = state => state;
+
+    @on("/paintings-changed") changePaintings = (state, newPaintings) => ({...state, paintings: newPaintings});
    
     @on("/token-changed") tokenChanged = (state, token) => ({...state, isLogged: !!token});
 }

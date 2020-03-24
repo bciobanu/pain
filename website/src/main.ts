@@ -11,3 +11,10 @@ app.on("#", (route, ...p) => {
 });
 
 app.run("/refresh");
+
+const dataPolling = () => {
+    setTimeout(() => app.run("/refresh"));
+};
+
+// poor man's websockets
+setInterval(dataPolling, 10000); // every 10 seconds
