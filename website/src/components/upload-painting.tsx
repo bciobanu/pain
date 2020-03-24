@@ -7,7 +7,7 @@ class UploadPaintingComponent extends Component {
     view = state => {
         return (
             <div class="uk-flex uk-flex-center">
-                <form target="_blank" action={API_URL + "upload-painting"} method="post" enctype="multipart/form-data">
+                <form action={API_URL + "upload-painting"} method="post" enctype="multipart/form-data">
                     <legend class="uk-legend">Upload a new painting</legend>
 
                     <div class="uk-margin">

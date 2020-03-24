@@ -295,6 +295,7 @@ func UploadPainting(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(Error{Error: "Could not save painting"})
 		return
 	}
+	http.Redirect(w, r, config.Website.Domain, http.StatusSeeOther)
 }
 
 func GetPaintings(w http.ResponseWriter, r *http.Request) {
