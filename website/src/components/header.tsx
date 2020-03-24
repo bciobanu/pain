@@ -4,6 +4,8 @@ class HeaderComponent extends Component {
     state = {};
 
     view = state => {
+        const {token} = state;
+        console.log(token);
         return (
             <nav class="uk-navbar-container uk-margin" uk-navbar>
                 <div class="uk-navbar-left">
@@ -11,13 +13,19 @@ class HeaderComponent extends Component {
                         Pain
                     </a>
                 </div>
-                <div class="uk-navbar-right">
-                    <div class="uk-navbar-item">
-                        <a href="#/login">Login</a>
+                {!token &&
+                    <div class="uk-navbar-right">
+                        <div class="uk-navbar-item">
+                            <a href="#/login">Login</a>
+                        </div>
                     </div>
-                </div>
+                }
             </nav>
         );
+    };
+
+    @on("/token-changed") tokenChanged = (state, token) => {
+        return {token: token};
     };
 }
 

@@ -27,4 +27,4 @@ class HomeComponent extends Component {
     @on("#/") root = this.updateState;
 }
 
-export default new HomeComponent().start("pain-app");
+export default new HomeComponent().mount("pain-app");

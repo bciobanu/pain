@@ -15,11 +15,14 @@ export interface IPaintingsResponse extends IPainting {
 export const Auth = {
     login: (user: ICredentials) => fetchAsync("POST", "login", user),
     register: (user: ICredentials) => fetchAsync("POST", "register", user),
-    refresh: () => fetchAsync("POST", "refresh").then(r => r["Value"]).then(setToken),
+    refresh: () =>
+        fetchAsync("POST", "refresh")
+            .then(r => r["Value"])
+            .then(setToken),
 };
 
 export const Paintings = {
     list: () => fetchAsync("GET", "paintings"),
-}
+};
 
 app.on("/refresh", Auth.refresh);
