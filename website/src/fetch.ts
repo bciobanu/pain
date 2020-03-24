@@ -23,7 +23,7 @@ export async function fetchAsync(method: "GET" | "POST" | "DELETE" | "PUT", url:
     };
     const token = getToken();
     if (token) {
-        headers["Authorization"] = `Token ${token}`;
+        headers["Authorization"] = `Bearer ${token}`;
     }
 
     const response = await window["fetch"](`${API_URL}${url}`, {

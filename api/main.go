@@ -95,17 +95,29 @@ func issueToken(user string) (*http.Cookie, error) {
 	}, nil
 }
 
-func getCredentials(r *http.Request) (*Claim, error) {
+func getTokenString(r *http.Request) (*string, error) {
 	cookie, err := r.Cookie("Token")
 	if err != nil {
-		if err == http.ErrNoCookie {
+		authToken := r.Header.Get("Authorization")
+		if authToken == "" {
 			return nil, errors.New("Unauthorized")
+		}
+
+		fields := strings.Fields(authToken)
+		if len(fields) == 2 {
+			return &fields[1], nil
 		}
 		return nil, errors.New("Bad request")
 	}
+	return &cookie.Value, nil
+}
 
-	tokenString := cookie.Value
-	token, err := jwt.ParseWithClaims(tokenString, &Claim{}, func(token *jwt.Token) (interface{}, error) {
+func getCredentials(r *http.Request) (*Claim, error) {
+	tokenString, err := getTokenString(r)
+	if err != nil {
+		return nil, err
+	}
+	token, err := jwt.ParseWithClaims(*tokenString, &Claim{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.JwtKey), nil
 	})
 	if err != nil {
@@ -197,7 +209,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.SetCookie(w, token)
-	encoder.Encode(claim)
+	encoder.Encode(token)
 }
 
 func isAllowedImageExtension(extension string) bool {
