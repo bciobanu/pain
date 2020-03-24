@@ -6,5 +6,6 @@ app.on("#", (route, ...p) => {
 });
 
 Auth.login({name: "bob", password: "zilla"});
+Auth.refresh().then(console.log);
 
 //app.run("/get-user");

@@ -57,11 +57,10 @@ var db *gorm.DB
 
 func getEncoder(w http.ResponseWriter, r *http.Request) *json.Encoder {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8081") // TODO: change to website domain
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-	w.WriteHeader(200)
 	atomic.AddUint64(&status.Requests, 1)
 	return json.NewEncoder(w)
 }
@@ -86,14 +85,14 @@ func issueToken(user string) (*http.Cookie, error) {
 	}
 	atomic.AddUint64(&status.TokensIssued, 1)
 	return &http.Cookie{
-		Name:    "token",
+		Name:    "Token",
 		Value:   tokenString,
 		Expires: expirationTime,
 	}, nil
 }
 
 func getCredentials(r *http.Request) (*Claim, error) {
-	cookie, err := r.Cookie("token")
+	cookie, err := r.Cookie("Token")
 	if err != nil {
 		if err == http.ErrNoCookie {
 			return nil, errors.New("Unauthorized")
@@ -101,19 +100,20 @@ func getCredentials(r *http.Request) (*Claim, error) {
 		return nil, errors.New("Bad request")
 	}
 
-	tokenString, claim := cookie.Value, &Claim{}
-	token, err := jwt.ParseWithClaims(tokenString, claim, func(token *jwt.Token) (interface{}, error) {
-		return config.JwtKey, nil
+	tokenString := cookie.Value
+	token, err := jwt.ParseWithClaims(tokenString, &Claim{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.JwtKey), nil
 	})
-	if err == jwt.ErrSignatureInvalid || !token.Valid {
-		return nil, errors.New("Unauthorized")
-	}
 	if err != nil {
 		return nil, errors.New("Bad request")
 	}
+	claim, ok := token.Claims.(*Claim)
+	if !ok || !token.Valid {
+		return nil, errors.New("Unauthorized")
+	}
 
-	const AfterExpiryTimeout = 30 * time.Second
-	if time.Unix(claim.ExpiresAt, 0).Sub(time.Now()) > AfterExpiryTimeout {
+	const AfterExpiryTimeout = -30 * time.Second
+	if time.Unix(claim.ExpiresAt, 0).Sub(time.Now()) < AfterExpiryTimeout {
 		return nil, errors.New("Bad request")
 	}
 	return claim, nil
@@ -193,6 +193,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.SetCookie(w, token)
+	encoder.Encode(claim)
 }
 
 func isAllowedImageExtension(extension string) bool {

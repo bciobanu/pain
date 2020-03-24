@@ -23,12 +23,13 @@ export async function fetchAsync(method: "GET" | "POST" | "DELETE" | "PUT", url:
     };
     const token = getToken();
     if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
+        headers["Authorization"] = `Token ${token}`;
     }
 
     const response = await window["fetch"](`${API_URL}${url}`, {
         method,
         headers,
+        credentials: "include",
         body: body && JSON.stringify(body),
     });
     if (response.status === 401) {
@@ -39,6 +40,8 @@ export async function fetchAsync(method: "GET" | "POST" | "DELETE" | "PUT", url:
     const result = await response.text().then(text => (text ? JSON.parse(text) : {}));
     if (!response.ok) {
         throw result;
+    } else if (result.hasOwnProperty("error")) {
+        throw new Error(result["error"]);
     }
     return result;
 }
