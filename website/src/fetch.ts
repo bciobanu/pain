@@ -8,10 +8,8 @@ export function getToken() {
 }
 
 export function setToken(token: string) {
-    if (token != app["token"]) {
-        app["token"] = token;
-        app.run("/token-changed", token);
-    }
+    app["token"] = token;
+    app.run("/token-changed", token);
 
     if (!window.localStorage) {
         return;

@@ -5,7 +5,6 @@ class HeaderComponent extends Component {
 
     view = state => {
         const {token} = state;
-        console.log(token);
         return (
             <nav class="uk-navbar-container uk-margin" uk-navbar>
                 <div class="uk-navbar-left">

@@ -13,18 +13,25 @@ class HomeComponent extends Component {
     };
 
     view = state => {
+        const {isLogged} = state;
+        if (isLogged) {
+            return (
+                <div>
+                    <p>Mare boss</p>
+                </div>
+            );
+        }
+
         return (
-            <div>
-                <p>{state.isLogged ? "Plm" : "plt"}</p>
+            <div class="uk-position-center">
+                <p class="Cabin uk-text-large">Experience museums like never before</p>
             </div>
         );
-    };
+    }
 
-    updateState = async (state: IState) => {
-        return {...state, isLogged: app["token"]};
-    };
-
-    @on("#/") root = this.updateState;
+    @on("#/") root = state => state;
+   
+    @on("/token-changed") tokenChanged = (state, token) => ({...state, isLogged: !!token});
 }
 
 export default new HomeComponent().mount("pain-app");
