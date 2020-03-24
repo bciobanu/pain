@@ -120,7 +120,7 @@ def main():
         res = annoy_lookup.get_neighbours(embedding)
 
         for filename, distance in res:
-            figure = plt.figure()
+            plt.figure()
             plt.title(str(distance))
             image = plt.imread(os.path.join(args.image_dir, filename))
             plt.imshow(image)
