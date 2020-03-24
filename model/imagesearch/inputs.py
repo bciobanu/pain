@@ -28,22 +28,23 @@ class ImageFolderWithPaths(data.Dataset):
         return len(self.imgs)
 
 
-def load_data(path, num_workers, batch_size=1):
+def get_transformation():
     normalize = transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
     )
+    return transforms.Compose(
+        [
+            transforms.Resize(256),
+            transforms.CenterCrop(256),
+            transforms.ToTensor(),
+            normalize,
+        ]
+    )
+
+
+def load_data(path, num_workers, batch_size=1):
     loader = data.DataLoader(
-        ImageFolderWithPaths(
-            path,
-            transforms.Compose(
-                [
-                    transforms.Resize(256),
-                    transforms.CenterCrop(256),
-                    transforms.ToTensor(),
-                    normalize,
-                ]
-            ),
-        ),
+        ImageFolderWithPaths(path, get_transformation(),),
         batch_size=batch_size,
         shuffle=False,
         num_workers=num_workers,
