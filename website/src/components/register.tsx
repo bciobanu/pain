@@ -1,8 +1,8 @@
 import {app, Component, on} from "apprun";
 import {Auth} from "../api";
-import {serializeObject} from "../fetch";
+import {getToken, serializeObject} from "../fetch";
 
-class LoginComponent extends Component {
+class RegisterComponent extends Component {
     state = {};
 
     goBack = state => {
@@ -17,8 +17,8 @@ class LoginComponent extends Component {
 
     view = state => {
         return (
-            <div id="login" class="uk-flex uk-flex-center">
-                <form onsubmit={e => this.run("auth", e)}>
+            <div class="uk-flex uk-flex-center">
+                <form onsubmit={e => this.run("register", e)}>
                     <div class="uk-margin">
                         <div class="uk-inline">
                             <span class="uk-form-icon" uk-icon="icon: user"></span>
@@ -33,25 +33,26 @@ class LoginComponent extends Component {
                         </div>
                     </div>
 
-                    <button class="uk-button uk-button-default uk-width-expand">Log in</button>
+                    <button class="uk-button uk-button-default uk-width-expand">Register</button>
                 </form>
             </div>
         );
     };
 
-    @on("#/login") login = state => state;
+    @on("#/register") register = state => state;
 
-    @on("auth") auth = async (state, e) => {
+    @on("register") auth = async (state, e) => {
         try {
             e.preventDefault();
 
-            await Auth.login(serializeObject(e.target));
+            await Auth.register(serializeObject(e.target));
             await Auth.refresh();
             this.goBack(state);
         } catch ({errors}) {
+            console.log(errors);
             return {...state, errors};
         }
     };
 }
 
-export default new LoginComponent().mount("pain-app");
+export default new RegisterComponent().mount("pain-app");

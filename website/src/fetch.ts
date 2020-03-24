@@ -1,16 +1,17 @@
 import app from "apprun";
 
-const API_URL = "http://localhost:8080/";
-const TOKEN_KEY = "jwt";
+export const API_URL = "http://localhost:8080/";
+export const TOKEN_KEY = "jwt";
 
 export function getToken() {
     return window?.localStorage.getItem(TOKEN_KEY) || "";
 }
 
 export function setToken(token: string) {
-    app["token"] = token;
-    app.run("/token-changed", token);
-
+    if (!!token !== !!app["token"]) {
+        app["token"] = token;
+        app.run("/token-changed", token);
+    }
     if (!window.localStorage) {
         return;
     }

@@ -10,6 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -215,42 +216,42 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 func isAllowedImageExtension(extension string) bool {
 	switch extension {
 	case
-		"jpg",
-		"jpeg",
-		"png":
+		".jpg",
+		".jpeg",
+		".png":
 		return true
 	}
 	return false
 }
 
-func uploadImage(r *http.Request) (*string, error) {
+func uploadImage(r *http.Request) (string, error) {
 	image, header, err := r.FormFile("image")
 	if err != nil {
-		return nil, errors.New("Invalid image")
+		return "", errors.New("Invalid image")
 	}
 	defer image.Close()
-	extension := strings.TrimSuffix(header.Filename, filepath.Ext(header.Filename))
+	extension := filepath.Ext(header.Filename)
 	if !isAllowedImageExtension(extension) {
-		return nil, errors.New("Invalid image extension")
+		log.Println(extension)
+		return "", errors.New("Invalid image extension")
 	}
 
 	imageData, err := ioutil.ReadAll(image)
 	if err != nil {
-		return nil, errors.New("Could not read image data")
+		return "", errors.New("Could not read image data")
 	}
 
-	imageFile, err := ioutil.TempFile("images", "*."+extension)
+	imageFile, err := ioutil.TempFile("images", "*"+extension)
 	imageFileName := imageFile.Name()
 	if err != nil {
 		log.Fatal(err)
-		return nil, errors.New("Internal server error")
+		return "", errors.New("Internal server error")
 	}
 	defer imageFile.Close()
 	if _, err := imageFile.Write(imageData); err != nil {
-		log.Fatal(err)
-		return nil, errors.New("Internal server error")
+		return "", errors.New("Internal server error")
 	}
-	return &imageFileName, nil
+	return imageFileName, nil
 }
 
 func UploadPainting(w http.ResponseWriter, r *http.Request) {
@@ -267,11 +268,13 @@ func UploadPainting(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	year, err := time.Parse(r.FormValue("Year"), "YYYY")
-	if err != nil {
+	var yearInt uint16
+	if _, err := fmt.Sscan(r.FormValue("Year"), &yearInt); err != nil {
 		encoder.Encode(Error{Error: "Bad year formatting"})
 		return
 	}
+	year := time.Date(int(yearInt), time.February, 0, 0, 0, 0, 0, time.UTC)
+
 	imagePath, err := uploadImage(r)
 	if err != nil {
 		encoder.Encode(Error{Error: err.Error()})
@@ -286,12 +289,13 @@ func UploadPainting(w http.ResponseWriter, r *http.Request) {
 		Medium:      r.FormValue("Medium"),
 		CreatedAt:   time.Now().UTC(),
 		Description: r.FormValue("Description"),
-		ImagePath:   *imagePath,
+		ImagePath:   imagePath,
 	}
 	if err := db.Create(painting).Error; err != nil {
 		encoder.Encode(Error{Error: "Could not save painting"})
 		return
 	}
+	http.Redirect(w, r, config.Website.Domain, http.StatusSeeOther)
 }
 
 func GetPaintings(w http.ResponseWriter, r *http.Request) {
