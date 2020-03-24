@@ -30,6 +30,10 @@ type Configuration struct {
 		User string
 		Pass string
 	}
+
+	Website struct {
+		Domain string
+	}
 }
 
 type Status struct {
@@ -57,7 +61,7 @@ var db *gorm.DB
 
 func getEncoder(w http.ResponseWriter, r *http.Request) *json.Encoder {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8081") // TODO: change to website domain
+	w.Header().Set("Access-Control-Allow-Origin", config.Website.Domain)
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")

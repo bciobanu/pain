@@ -7,3 +7,6 @@ Port = 5432
 Name = "pain_api"
 User = "postgres"
 Pass = "postgres"
+
+[Website]
+Domain = "http://localhost:8081"
