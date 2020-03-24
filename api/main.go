@@ -301,7 +301,7 @@ func GetPaintings(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(Error{Error: err.Error()})
 		return
 	}
-	paintings := []Painting {}
+	paintings := []Painting{}
 	if err := db.Where("user_name = ?", claim.Name).Find(&paintings).Error; err != nil {
 		encoder.Encode(Error{Error: "Internal DB error"})
 		return

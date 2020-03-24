@@ -1,3 +1,5 @@
+import app from "apprun";
+
 import {fetchAsync, setToken} from "./fetch";
 import {IPainting} from "./models";
 
@@ -19,3 +21,5 @@ export const Auth = {
 export const Paintings = {
     list: () => fetchAsync("GET", "paintings"),
 }
+
+app.on("/refresh", Auth.refresh);
