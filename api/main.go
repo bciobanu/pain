@@ -56,7 +56,11 @@ var status Status
 var db *gorm.DB
 
 func getEncoder(w http.ResponseWriter, r *http.Request) *json.Encoder {
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
 	w.WriteHeader(200)
 	atomic.AddUint64(&status.Requests, 1)
 	return json.NewEncoder(w)
@@ -298,11 +302,11 @@ func main() {
 	db = initDatabase()
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/status", GetStatus).Methods("GET")
-	router.HandleFunc("/register", Register).Methods("POST")
-	router.HandleFunc("/login", Login).Methods("POST")
-	router.HandleFunc("/refresh", Refresh).Methods("POST")
-	router.HandleFunc("/upload-painting", UploadPainting).Methods("POST")
-	router.HandleFunc("/paintings", GetPaintings).Methods("GET")
+	router.HandleFunc("/status", GetStatus).Methods("GET", "OPTIONS")
+	router.HandleFunc("/register", Register).Methods("POST", "OPTIONS")
+	router.HandleFunc("/login", Login).Methods("POST", "OPTIONS")
+	router.HandleFunc("/refresh", Refresh).Methods("POST", "OPTIONS")
+	router.HandleFunc("/upload-painting", UploadPainting).Methods("POST", "OPTIONS")
+	router.HandleFunc("/paintings", GetPaintings).Methods("GET", "OPTIONS")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
