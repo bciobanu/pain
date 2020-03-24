@@ -9,7 +9,7 @@ import (
 )
 
 type User struct {
-	Name     string
+	Name     string `gorm:"primary_key"`
 	Passhash string
 }
 
