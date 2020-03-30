@@ -13,7 +13,7 @@ class RegisterComponent extends Component {
             app.run("route", returnTo);
             history.pushState(null, null, returnTo);
         }
-    }
+    };
 
     view = state => {
         return (

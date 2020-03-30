@@ -8,17 +8,16 @@ export function getToken() {
 }
 
 export function setToken(token: string) {
+    if (window.localStorage) {
+        if (token) {
+            window.localStorage.setItem(TOKEN_KEY, token);
+        } else {
+            window.localStorage.removeItem(TOKEN_KEY);
+        }
+    }
     if (!!token !== !!app["token"]) {
         app["token"] = token;
         app.run("/token-changed", token);
-    }
-    if (!window.localStorage) {
-        return;
-    }
-    if (token) {
-        window.localStorage.setItem(TOKEN_KEY, token);
-    } else {
-        window.localStorage.removeItem(TOKEN_KEY);
     }
 }
 

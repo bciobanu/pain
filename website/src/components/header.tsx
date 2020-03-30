@@ -1,4 +1,5 @@
 import {app, Component, on} from "apprun";
+import {setToken} from "../fetch";
 
 class HeaderComponent extends Component {
     state = {};
@@ -6,26 +7,37 @@ class HeaderComponent extends Component {
     view = state => {
         const {token} = state;
         return (
-            <nav class="uk-navbar-container uk-margin" uk-navbar>
+            <nav class="uk-navbar-container" uk-navbar>
                 <div class="uk-navbar-left">
                     <a class="uk-navbar-item uk-logo" href="#">
                         Pain
                     </a>
                     {token && <a class="uk-navbar-item uk-icon" uk-icon="icon: upload" href="#/upload-painting" />}
+                    <a class="uk-navbar-item" onclick={e => this.run("credentials", e)}>
+                        {!token ? "Login" : "Logout"}
+                    </a>
                 </div>
-                {!token &&
-                    <div class="uk-navbar-right">
-                        <div class="uk-navbar-item">
-                            <a href="#/login">Login</a>
-                        </div>
-                    </div>
-                }
             </nav>
         );
     };
 
+    @on("credentials") credentials = (state, e) => {
+        e.preventDefault();
+        if (state.token) {
+            document.cookie.split(";").forEach(c => {
+                document.cookie = c
+                    .replace(/^ +/, "")
+                    .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            setToken(null);
+            location.reload();
+        } else {
+            this.run("#/login");
+        }
+    };
+
     @on("/token-changed") tokenChanged = (state, token) => {
-        return {token: token};
+        return {...state, token: token};
     };
 }
 

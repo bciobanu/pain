@@ -28,27 +28,24 @@ class HomeComponent extends Component {
                 );
             }
 
-            const paintingsTable = paintings.length == 0 ?
-                <p class="Cabin uk-text-medium">Your paintings will appear here..</p> :
-                <table class="uk-table uk-table-hover uk-table-divider">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Artist</th>
-                            <th>Year</th>
-                            <th>Medium</th>
-                            <th>Created at</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                         {paintingBody}
-                    </tbody>
-                </table>;
-            return (
-                <div class="uk-flex uk-flex-center">
-                    {paintingsTable}
-                </div>
-            );
+            const paintingsTable =
+                paintings.length == 0 ? (
+                    <p class="Cabin uk-text-medium">Your paintings will appear here..</p>
+                ) : (
+                    <table class="uk-table uk-table-hover uk-table-divider">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Artist</th>
+                                <th>Year</th>
+                                <th>Medium</th>
+                                <th>Created at</th>
+                            </tr>
+                        </thead>
+                        <tbody>{paintingBody}</tbody>
+                    </table>
+                );
+            return <div class="uk-flex uk-flex-center">{paintingsTable}</div>;
         }
 
         return (
@@ -56,12 +53,12 @@ class HomeComponent extends Component {
                 <p class="Cabin uk-text-large">Experience museums like never before</p>
             </div>
         );
-    }
+    };
 
     @on("#/") root = state => state;
 
     @on("/paintings-changed") changePaintings = (state, newPaintings) => ({...state, paintings: newPaintings});
-   
+
     @on("/token-changed") tokenChanged = (state, token) => ({...state, isLogged: !!token});
 }
 
