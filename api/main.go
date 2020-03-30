@@ -322,7 +322,7 @@ func main() {
 	db = initDatabase()
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.PathPrefix("/image/").Handler(http.StripPrefix("/image/", http.FileServer(http.Dir("images"))))
+	router.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
 	router.HandleFunc("/status", GetStatus).Methods("GET", "OPTIONS")
 	router.HandleFunc("/register", Register).Methods("POST", "OPTIONS")
 	router.HandleFunc("/login", Login).Methods("POST", "OPTIONS")

@@ -1,5 +1,6 @@
 import {app, Component, on} from "apprun";
 import {IPainting} from "../models";
+import {getImageLink} from "../fetch";
 
 declare interface IState {
     paintings: Array<IPainting>;
@@ -19,6 +20,9 @@ class HomeComponent extends Component {
             for (const painting of paintings) {
                 paintingBody.push(
                     <tr>
+                        <td>
+                            <a href={getImageLink(painting.imagePath)}>View</a>
+                        </td>
                         <td>{painting.name}</td>
                         <td>{painting.artist}</td>
                         <td>{new Date(painting.year).getFullYear()}</td>
@@ -35,6 +39,7 @@ class HomeComponent extends Component {
                     <table class="uk-table uk-table-hover uk-table-divider">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Name</th>
                                 <th>Artist</th>
                                 <th>Year</th>

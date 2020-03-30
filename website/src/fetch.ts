@@ -3,6 +3,10 @@ import app from "apprun";
 export const API_URL = "http://localhost:8080/";
 export const TOKEN_KEY = "jwt";
 
+export function getImageLink(image) {
+    return API_URL + image;
+}
+
 export function getToken() {
     return window?.localStorage.getItem(TOKEN_KEY) || "";
 }
