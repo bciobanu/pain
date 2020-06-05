@@ -18,6 +18,7 @@ defmodule DashboardWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    resources "/painting", PageController, only: [:new, :create]
 
     resources "/session", SessionController, only: [:new, :create]
     delete "/signout", SessionController, :delete

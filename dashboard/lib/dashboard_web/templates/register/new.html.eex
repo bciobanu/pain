@@ -6,7 +6,7 @@
 
     <div class="form-label-group">
       <%= text_input f, :username, class: "form-control", placeholder: "Username", required: true, autofocus: true %>
-      <%= label f, :username, "Email address", class: "control-label" %>
+      <%= label f, :username, "Username", class: "control-label" %>
       <%= error_tag f, :username %>
     </div>
 

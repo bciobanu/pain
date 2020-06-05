@@ -1,4 +1,8 @@
 <%= unless is_nil(@paintings) do %>
+  <div class="row justify-content-center">
+    <h5 class="col-4">Paintings</h5>
+    <a class="col-4" href="<%= Routes.page_path(@conn, :new) %>">Add a new painting</a>
+  </div>
   <div class="accordion" id="painting-acordion">
     <%= for painting <- @paintings do %>
       <div class="card">
@@ -25,5 +29,5 @@
     <% end %>
   </div>
 <% else %>
-  Looks kind of empty in here.. Why don't you add a paiting?
+  Looks kind of empty in here.. Why don't you <a href="<%= Routes.page_path(@conn, :new) %>">add</a> a paiting?
 <% end %>
