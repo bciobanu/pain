@@ -9,7 +9,10 @@ defmodule DashboardWeb.Plugs.Authenticate do
 
   def call(conn, _params) do
     user_id = Plug.Conn.get_session(conn, :current_user_id)
-    assign(conn, :current_user,
+
+    assign(
+      conn,
+      :current_user,
       if current_user = user_id && Repo.get(User, user_id) do
         current_user
       else

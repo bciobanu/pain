@@ -4,7 +4,7 @@ defmodule DashboardWeb.SessionController do
   plug DashboardWeb.Plugs.EnsureUnauthenticated when action not in [:delete]
 
   def new(conn, _params) do
-    render conn, "new.html"
+    render(conn, "new.html")
   end
 
   def create(conn, %{"session" => %{"username" => username, "password" => password}}) do
