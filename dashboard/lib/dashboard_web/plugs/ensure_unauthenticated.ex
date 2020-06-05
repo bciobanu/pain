@@ -1,9 +1,5 @@
 defmodule DashboardWeb.Plugs.EnsureUnauthenticated do
-  import Plug.Conn
   import Phoenix.Controller
-
-  alias Dashboard.Repo
-  alias Dashboard.Auth.User
 
   def init(_params) do
   end
