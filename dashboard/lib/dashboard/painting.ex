@@ -2,7 +2,8 @@ defmodule Dashboard.Painting do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "name" do
+  schema "painting" do
+    field :name, :string
     field :artist, :string
     field :description, :string
     field :image_path, :string
@@ -16,7 +17,7 @@ defmodule Dashboard.Painting do
   @doc false
   def changeset(painting, attrs) do
     painting
-    |> cast(attrs, [:artist, :medium, :description, :image_path, :year])
-    |> validate_required([:artist, :medium, :description, :image_path, :year])
+    |> cast(attrs, [:name, :artist, :medium, :description, :image_path, :year])
+    |> validate_required([:name, :artist, :medium, :description, :image_path, :year])
   end
 end

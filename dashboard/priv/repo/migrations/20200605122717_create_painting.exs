@@ -2,7 +2,8 @@ defmodule Dashboard.Repo.Migrations.CreateName do
   use Ecto.Migration
 
   def change do
-    create table(:name) do
+    create table(:painting) do
+      add :name, :string
       add :artist, :string
       add :medium, :string
       add :description, :string
@@ -13,6 +14,6 @@ defmodule Dashboard.Repo.Migrations.CreateName do
       timestamps()
     end
 
-    create index(:name, [:user_id])
+    create index(:painting, [:user_id])
   end
 end
