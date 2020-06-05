@@ -36,15 +36,17 @@ defmodule DashboardWeb.PageController do
 
     painting = painting |> Map.put_new("image_path", upload(painting["image"]))
 
-    inserted = %Dashboard.Painting{}
-    |> Dashboard.Painting.changeset(painting)
-    |> Repo.insert()
+    inserted =
+      %Dashboard.Painting{}
+      |> Dashboard.Painting.changeset(painting)
+      |> Repo.insert()
 
     case inserted do
       {:ok, _painting} ->
         conn
         |> put_flash(:info, "Successfully uploaded!")
         |> redirect(to: Routes.page_path(conn, :index))
+
       {:error, changeset} ->
         conn
         |> put_flash(:error, "There was an error uploading the painting.")
