@@ -4,6 +4,12 @@
   --input-padding-y: .75rem;
 }
 
+.card-picture {
+  max-height: 400px; 
+  max-width: 400px;
+  object-fit: scale-down;
+}
+
 .auth-form-wrapper {
   display: -ms-flexbox;
   display: -webkit-box;
