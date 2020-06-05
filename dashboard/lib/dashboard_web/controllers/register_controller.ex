@@ -1,8 +1,10 @@
 defmodule DashboardWeb.RegisterController do
   use DashboardWeb, :controller
 
+  plug DashboardWeb.Plugs.EnsureUnauthenticated
+
   def new(conn, _params) do
-    render conn, "new.html", changeset: conn
+    render(conn, "new.html", changeset: conn)
   end
 
   def create(conn, %{"register" => register_params}) do

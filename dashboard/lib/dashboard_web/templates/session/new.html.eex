@@ -15,5 +15,9 @@
     </div>
 
     <%= submit "Sign in", class: "btn btn-lg btn-primary btn-block" %>
+
+    <div class="text-center mb-4">
+      No acccount? <a href="<%= Routes.register_path(@conn, :new) %>">Sign up</a>
+    </div>
   <% end %>
 </div>

@@ -1,6 +1,8 @@
 defmodule DashboardWeb.SessionController do
   use DashboardWeb, :controller
 
+  plug DashboardWeb.Plugs.EnsureUnauthenticated when action not in [:delete]
+
   def new(conn, _params) do
     render conn, "new.html"
   end
