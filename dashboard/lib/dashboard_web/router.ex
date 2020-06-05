@@ -7,6 +7,7 @@ defmodule DashboardWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug DashboardWeb.Plugs.Authenticate
   end
 
   pipeline :api do
@@ -22,7 +23,6 @@ defmodule DashboardWeb.Router do
     delete "/signout", SessionController, :delete
 
     resources "/register", RegisterController, only: [:new, :create]
-
   end
 
   # Other scopes may use custom stacks.
