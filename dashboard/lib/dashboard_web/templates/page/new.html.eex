@@ -1,0 +1,42 @@
+<div class="auth-form-wrapper">
+  <%= form_for @changeset, Routes.page_path(@conn, :create), [as: :painting, class: "form-signin", multipart: true], fn f -> %>
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-3 font-weight-normal">Add a new painting</h1>
+    </div>
+
+    <div class="form-label-group">
+      <%= text_input f, :name, class: "form-control", placeholder: "Name", required: true, autofocus: true %>
+      <%= label f, :name, "Name", class: "control-label" %>
+      <%= error_tag f, :name %>
+    </div>
+
+    <div class="form-label-group">
+      <%= text_input f, :artist, class: "form-control", placeholder: "Artist", required: true %>
+      <%= label f, :artist, "Author", class: "control-label" %>
+      <%= error_tag f, :artist %>
+    </div>
+
+    <div class="form-label-group">
+      <%= text_input f, :medium, class: "form-control", placeholder: "Medium", required: true %>
+      <%= label f, :medium, "Medium", class: "control-label" %>
+      <%= error_tag f, :medium %>
+    </div>
+
+    <div class="form-padding">
+      <%= datetime_local_input f, :year_string, class: "form-control", required: true %>
+      <%= error_tag f, :year_string %>
+    </div>
+
+    <div class="form-padding">
+      <%= file_input f, :image, class: "form-control", required: true %>
+      <%= error_tag f, :image %>
+    </div>
+
+     <div class="form-padding">
+      <%= textarea f, :description, class: "form-control", placeholder: "Description", required: true %>
+      <%= error_tag f, :description %>
+    </div>
+
+    <%= submit "Upload", class: "btn btn-lg btn-primary btn-block" %>
+  <% end %>
+</div>

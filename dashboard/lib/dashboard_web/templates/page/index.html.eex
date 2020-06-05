@@ -1,0 +1,33 @@
+<%= unless is_nil(@paintings) do %>
+  <div class="row justify-content-center">
+    <h5 class="col-4">Paintings</h5>
+    <a class="col-4" href="<%= Routes.page_path(@conn, :new) %>">Add a new painting</a>
+  </div>
+  <div class="accordion" id="painting-acordion">
+    <%= for painting <- @paintings do %>
+      <div class="card">
+        <div class="card-header" id="heading-<%= painting.id %>">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-<%= painting.id %>" aria-expanded="false" aria-controls="collapse-<%= painting.id %>">
+              <%= painting.name %>
+            </button>
+          </h2>
+        </div>
+
+        <div id="collapse-<%= painting.id %>" class="collapse card" aria-labelledby="heading-<%= painting.id %>" data-parent="#painting-acordion">
+          <img class="card-picture" src="<%= Routes.static_path(@conn, "/user_content/" <> painting.image_path) %>" alt="Missing painting image">
+          <div class="card-body">
+            <div class="card-title">
+              <strong>Artist:</strong> <%= painting.artist %><br>
+              <strong>Medium:</strong> <%= painting.medium %><br>
+              <strong>Year:</strong> <%= painting.year.year %><br>
+            </div>
+            <%= painting.description %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  Looks kind of empty in here.. Why don't you <a href="<%= Routes.page_path(@conn, :new) %>">add</a> a paiting?
+<% end %>
