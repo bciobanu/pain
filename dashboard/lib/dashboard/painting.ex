@@ -17,7 +17,7 @@ defmodule Dashboard.Painting do
   @doc false
   def changeset(painting, attrs) do
     painting
-    |> cast(attrs, [:name, :artist, :medium, :description, :image_path, :year])
-    |> validate_required([:name, :artist, :medium, :description, :image_path, :year])
+    |> cast(attrs, [:name, :artist, :medium, :description, :image_path, :year, :user_id])
+    |> validate_required([:name, :artist, :medium, :description, :image_path, :year, :user_id])
   end
 end
