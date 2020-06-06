@@ -6,6 +6,8 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from torchvision import models
+import torch.nn as nn
 from annoy import AnnoyIndex
 from PIL import Image
 from tqdm import tqdm
@@ -13,9 +15,18 @@ from tqdm import tqdm
 from imagesearch.inputs import get_transformation, load_data
 from imagesearch.model import Autoencoder
 
+
+class Identity(nn.Module):
+    def __init__(self):
+        super(Identity, self).__init__()
+
+    def forward(self, x):
+        return x
+
+
 parser = argparse.ArgumentParser()
 
-parser.add_argument("--model-path", help="Location to model checkpoint", required=True)
+parser.add_argument("--model-path", help="Location to model checkpoint")
 parser.add_argument("--image-dir", help="Director of stored images", required=True)
 parser.add_argument(
     "--metadata-dir",
@@ -60,24 +71,31 @@ class AnnoyLookup(object):
 
 def main():
     args = parser.parse_args()
+    args.use_alexnet = not args.model_path
 
-    model = Autoencoder().cuda()
-    if os.path.isfile(args.model_path):
-        print("=> loading checkpoint '{}'".format(args.model_path))
-        checkpoint = torch.load(args.model_path)
-        model.load_state_dict(checkpoint["state_dict"])
-        print("=> loaded checkpoint")
+    if args.use_alexnet:
+        model = models.alexnet(pretrained=True).cuda()
+        model.classifier[6] = Identity().cuda()
+        args.center_crop = 224
     else:
-        print("=> no checkpoint found at '{}'".format(args.resume))
-        return
+        model = Autoencoder().cuda()
+        args.center_crop = 256
+        if os.path.isfile(args.model_path):
+            print("=> loading checkpoint '{}'".format(args.model_path))
+            checkpoint = torch.load(args.model_path)
+            model.load_state_dict(checkpoint["state_dict"])
+            print("=> loaded checkpoint")
+        else:
+            print("=> no checkpoint found at '{}'".format(args.resume))
+            return
     model.eval()
 
     if args.generate:
-        image_loader = load_data(args.image_dir, args.num_workers)
+        image_loader = load_data(args.image_dir, args.num_workers, center_crop=args.center_crop)
         predictions = []
         with torch.no_grad():
             predictions = [
-                (path, model.encoder(image.cuda())[0].cpu().numpy().flatten())
+                (path, (model(image.cuda()) if args.use_alexnet else model.encoder(image.cuda()))[0].cpu().numpy().flatten())
                 for image, path in image_loader
             ]
         image_paths = [path[0] for path, _ in predictions]
@@ -108,13 +126,13 @@ def main():
 
     if args.query_path:
         img = Image.open(args.query_path).convert("RGB")
-        transform = get_transformation()
+        transform = get_transformation(center_crop=args.center_crop)
         img = transform(img)
         img = img.unsqueeze(0)
         img = img.cuda()
         embedding = None
         with torch.no_grad():
-            embedding = model.encoder(img).cpu().numpy().flatten()
+            embedding = (model(img) if args.use_alexnet else model.encoder(img)).cpu().numpy().flatten()
 
         annoy_lookup = AnnoyLookup(args.metadata_dir)
         res = annoy_lookup.get_neighbours(embedding)
