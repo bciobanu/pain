@@ -6,10 +6,10 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from torchvision import models
 import torch.nn as nn
 from annoy import AnnoyIndex
 from PIL import Image
+from torchvision import models
 from tqdm import tqdm
 
 from imagesearch.inputs import get_transformation, load_data
@@ -91,11 +91,23 @@ def main():
     model.eval()
 
     if args.generate:
-        image_loader = load_data(args.image_dir, args.num_workers, center_crop=args.center_crop)
+        image_loader = load_data(
+            args.image_dir, args.num_workers, center_crop=args.center_crop
+        )
         predictions = []
         with torch.no_grad():
             predictions = [
-                (path, (model(image.cuda()) if args.use_alexnet else model.encoder(image.cuda()))[0].cpu().numpy().flatten())
+                (
+                    path,
+                    (
+                        model(image.cuda())
+                        if args.use_alexnet
+                        else model.encoder(image.cuda())
+                    )[0]
+                    .cpu()
+                    .numpy()
+                    .flatten(),
+                )
                 for image, path in image_loader
             ]
         image_paths = [path[0] for path, _ in predictions]
@@ -132,7 +144,12 @@ def main():
         img = img.cuda()
         embedding = None
         with torch.no_grad():
-            embedding = (model(img) if args.use_alexnet else model.encoder(img)).cpu().numpy().flatten()
+            embedding = (
+                (model(img) if args.use_alexnet else model.encoder(img))
+                .cpu()
+                .numpy()
+                .flatten()
+            )
 
         annoy_lookup = AnnoyLookup(args.metadata_dir)
         res = annoy_lookup.get_neighbours(embedding)
