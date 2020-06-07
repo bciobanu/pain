@@ -68,13 +68,16 @@ parser.add_argument(
 )
 
 
-def main():
-    args = parser.parse_args()
+def main(args=None):
+    handler_call = args is not None
+    args = args or parser.parse_args()
+    is_cuda_available = torch.cuda.is_available()
+    args.device = torch.device("cuda" if is_cuda_available else "gpu")
     writer = SummaryWriter()
 
     best_loss = float("Inf")
-    model = Autoencoder().cuda()
-    criterion = nn.MSELoss().cuda()
+    model = Autoencoder().to(args.device)
+    criterion = nn.MSELoss().to(args.device)
     optimizer = optim.Adam(
         model.parameters(), lr=args.lr, weight_decay=args.weight_decay
     )
@@ -96,9 +99,14 @@ def main():
         else:
             print("=> no checkpoint found at '{}'".format(args.resume))
 
-    traindir = os.path.join(args.data, "train")
-    valdir = os.path.join(args.data, "dev")
-    testdir = os.path.join(args.data, "test")
+    if not handler_call:
+        traindir = os.path.join(args.data, "train")
+        valdir = os.path.join(args.data, "dev")
+        testdir = os.path.join(args.data, "test")
+    else:
+        traindir = args.data
+        valdir = args.data
+        testdir = args.data
 
     train_loader = load_data(
         traindir, num_workers=args.workers, batch_size=args.batch_size
@@ -107,18 +115,32 @@ def main():
     test_loader = load_data(testdir, num_workers=args.workers)
 
     if args.test:
-        test(test_loader, model, criterion, os.path.join(args.data, "output_test"))
+        test(
+            test_loader,
+            model,
+            criterion,
+            os.path.join(args.data, "output_test"),
+            args.device,
+        )
         return
 
     if args.evaluate:
-        validate(val_loader, model, criterion, args.print_freq)
+        validate(val_loader, model, criterion, args.print_freq, args.device)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
         train_loss = train(
-            train_loader, model, criterion, optimizer, epoch, args.print_freq
+            train_loader,
+            model,
+            criterion,
+            optimizer,
+            epoch,
+            args.print_freq,
+            args.device,
         )
-        validation_loss = validate(val_loader, model, criterion, args.print_freq)
+        validation_loss = validate(
+            val_loader, model, criterion, args.print_freq, args.device
+        )
         is_best = validation_loss < best_loss
         best_loss = min(best_loss, validation_loss)
         save_checkpoint(
@@ -129,6 +151,8 @@ def main():
                 "best_loss": best_loss,
             },
             is_best,
+            bestname=args.best_name or "model_best.pth",
+            no_ckpt=args.no_ckpt or False,
         )
         writer.add_scalars(
             "Loss", {"train": train_loss, "validation": validation_loss}, epoch
@@ -136,7 +160,7 @@ def main():
 
     it = iter(train_loader)
     images, _ = it.__next__()
-    writer.add_graph(model, images.cuda())
+    writer.add_graph(model, images.to(args.device))
     writer.close()
 
 
