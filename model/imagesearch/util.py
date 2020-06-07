@@ -22,7 +22,10 @@ class AverageMeter(object):
         self.avg = self.sum / self.cnt
 
 
-def save_checkpoint(state, is_best, filename="checkpoint.pth"):
-    torch.save(state, filename)
+def save_checkpoint(
+    state, is_best, filename="checkpoint.pth", bestname="model_best.pth", no_ckpt=False
+):
+    if not no_ckpt:
+        torch.save(state, filename)
     if is_best:
-        shutil.copyfile(filename, "model_best.pth")
+        torch.save(state, bestname)

@@ -8,7 +8,7 @@ from torchvision.utils import save_image
 from imagesearch.util import AverageMeter
 
 
-def train(train_loader, model, criterion, optimizer, epoch, print_freq):
+def train(train_loader, model, criterion, optimizer, epoch, print_freq, device):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -19,7 +19,7 @@ def train(train_loader, model, criterion, optimizer, epoch, print_freq):
     start = time.time()
     for i, (images, _) in enumerate(train_loader):
         data_time.update(time.time() - start)
-        images = images.cuda()
+        images = images.to(device)
         targets = images
 
         # compute y_pred
@@ -55,7 +55,7 @@ def train(train_loader, model, criterion, optimizer, epoch, print_freq):
     return losses.avg
 
 
-def validate(val_loader, model, criterion, print_freq):
+def validate(val_loader, model, criterion, print_freq, device):
     batch_time = AverageMeter()
     losses = AverageMeter()
 
@@ -64,7 +64,7 @@ def validate(val_loader, model, criterion, print_freq):
 
     start = time.time()
     for i, (images, _) in enumerate(val_loader):
-        images = images.cuda()
+        images = images.to(device)
         targets = images
 
         # compute y_pred
@@ -91,14 +91,14 @@ def validate(val_loader, model, criterion, print_freq):
     return losses.avg
 
 
-def test(test_loader, model, criterion, output_dir):
+def test(test_loader, model, criterion, output_dir, device):
     # switch to eval mode
     model.eval()
 
     for i, (image, path) in enumerate(test_loader):
         filename = os.path.basename(path[0])
         filename, ext = os.path.splitext(filename)
-        image = image.cuda()
+        image = image.to(device)
         y_pred = model(image)
         loss = criterion(y_pred, image)
         print(f"{filename} : Loss = {loss}")
