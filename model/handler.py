@@ -80,7 +80,7 @@ def load(image_folder, model_path="./model_best.pth", num_workers=4):
         logger.info("=> loaded checkpoint")
     else:
         logger.error("no checkpoint found at '{}'".format(model_path))
-        raise FileNotFoundError
+        return
     index_model = generate_kdtree_(
         model.encoder, image_folder, CENTER_CROP_MODEL, num_workers=num_workers
     )
@@ -145,13 +145,16 @@ def predict_(image_path, top_n=5):
     global filenames
 
     # top n Model
-    model_emb = get_image_emb_(model.encoder, image_path, CENTER_CROP_MODEL)
-    items, distances = index_model.get_nns_by_vector(
-        model_emb, top_n, include_distances=True
-    )
-    zipped = zip(items, distances)
-    sorted_list = sorted(zipped, key=lambda t: t[1])
-    best_from_model = [(filenames[idx], dst) for idx, dst in sorted_list]
+    if model:
+        model_emb = get_image_emb_(model.encoder, image_path, CENTER_CROP_MODEL)
+        items, distances = index_model.get_nns_by_vector(
+            model_emb, top_n, include_distances=True
+        )
+        zipped = zip(items, distances)
+        sorted_list = sorted(zipped, key=lambda t: t[1])
+        best_from_model = [(filenames[idx], dst) for idx, dst in sorted_list]
+    else:
+        best_from_model = []
 
     # top n AlexNet
     alexnet_emb = get_image_emb_(alexnet, image_path, CENTER_CROP_ALEXNET)

@@ -13,7 +13,7 @@ defmodule Dashboard.Predictor do
   def init(_state) do
     {:ok, pid} = :python.start(python_path: @model_path |> to_charlist)
     state = %{pid: pid}
-    :python.call(state.pid, :handler, :load, [])
+    :python.call(state.pid, :handler, :load, [@image_path])
     {:ok, state}
   end
 
