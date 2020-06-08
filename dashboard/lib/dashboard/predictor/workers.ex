@@ -1,4 +1,4 @@
-defmodule Dashboard.PredictorWorkers do
+defmodule Dashboard.Predictor.Workers do
   def num_workers() do
     3
   end

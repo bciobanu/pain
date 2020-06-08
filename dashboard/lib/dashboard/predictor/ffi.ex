@@ -1,4 +1,4 @@
-defmodule Dashboard.Predictor do
+defmodule Dashboard.Predictor.FFI do
   use GenServer
 
   # computed at compile time, so cwd will be `pain/dashboard` expanded as an absolute path

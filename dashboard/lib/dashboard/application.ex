@@ -5,8 +5,6 @@ defmodule Dashboard.Application do
 
   use Application
 
-  require Dashboard.PredictorWorkers
-
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
@@ -21,8 +19,8 @@ defmodule Dashboard.Application do
       # {Dashboard.Worker, arg}
       :poolboy.child_spec(:predictor, [
         {:name, {:local, :predictor}},
-        {:worker_module, Dashboard.Predictor},
-        {:size, Dashboard.PredictorWorkers.num_workers()},
+        {:worker_module, Dashboard.Predictor.FFI},
+        {:size, Dashboard.Predictor.Workers.num_workers()},
         {:max_overflow, 0}
       ])
     ]
