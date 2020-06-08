@@ -41,7 +41,13 @@ defmodule DashboardWeb.Telemetry do
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),
       summary("vm.total_run_queue_lengths.cpu"),
-      summary("vm.total_run_queue_lengths.io")
+      summary("vm.total_run_queue_lengths.io"),
+
+      # Predictor Metrics
+      summary("dashboard.predictor.predict.duration", unit: {:native, :millisecond}),
+      summary("dashboard.predictor.add_alexnet.duration", unit: {:native, :millisecond}),
+      summary("dashboard.predictor.reload.duration", unit: {:native, :millisecond}),
+      summary("dashboard.predictor.train.duration", unit: {:native, :millisecond})
     ]
   end
 
