@@ -145,7 +145,7 @@ def predict_(image_path, top_n=5):
     global filenames
 
     # top n Model
-    if model:
+    if model and index_model:
         model_emb = get_image_emb_(model.encoder, image_path, CENTER_CROP_MODEL)
         items, distances = index_model.get_nns_by_vector(
             model_emb, top_n, include_distances=True

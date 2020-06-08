@@ -2,9 +2,9 @@ defmodule Dashboard.Predictor do
   use GenServer
 
   # computed at compile time, so cwd will be `pain/dashboard` expanded as an absolute path
-  @model_path (File.cwd!() <> "/../model") |> Path.expand()
+  @model_path File.cwd!() |> Path.join("/../model") |> Path.expand()
 
-  @image_path File.cwd!() <> "/priv/static/user_content"
+  @image_path File.cwd!() |> Path.join("/priv/static/user_content")
 
   def start_link(state) do
     GenServer.start_link(__MODULE__, state, [])
@@ -28,6 +28,11 @@ defmodule Dashboard.Predictor do
 
   def handle_call(:train, _from, state) do
     :python.call(state.pid, :handler, :train, [@image_path])
+    {:reply, :ok, state}
+  end
+
+  def handle_call(:reload, _from, state) do
+    :python.call(state.pid, :handler, :load, [@image_path])
     {:reply, :ok, state}
   end
 

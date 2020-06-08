@@ -7,13 +7,8 @@ from PIL import Image
 
 class ImageFolderWithPaths(data.Dataset):
     def __init__(self, root, transform=None):
-        images = []
-        for filename in os.listdir(root):
-            if filename.endswith("jpg"):
-                images.append("{}".format(filename))
-
         self.root = root
-        self.imgs = images
+        self.imgs = list(os.listdir(root))
         self.transform = transform
 
     def __getitem__(self, index):

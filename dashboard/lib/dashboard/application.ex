@@ -20,7 +20,7 @@ defmodule Dashboard.Application do
       :poolboy.child_spec(:predictor, [
         {:name, {:local, :predictor}},
         {:worker_module, Dashboard.Predictor},
-        {:size, 5},
+        {:size, 3},
         {:max_overflow, 0}
       ])
     ]
