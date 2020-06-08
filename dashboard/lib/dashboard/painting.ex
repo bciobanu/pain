@@ -19,5 +19,6 @@ defmodule Dashboard.Painting do
     painting
     |> cast(attrs, [:name, :artist, :medium, :description, :image_path, :year, :user_id])
     |> validate_required([:name, :artist, :medium, :description, :image_path, :year, :user_id])
+    |> validate_format(:image_path, ~r/.jpg$/)
   end
 end
