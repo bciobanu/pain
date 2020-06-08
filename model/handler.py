@@ -15,7 +15,7 @@ from imagesearch.inputs import get_transformation, load_data
 from imagesearch.model import Autoencoder
 from run_model import main as run_model_main
 
-logger = logging.getLogger("__file__")
+logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
 CENTER_CROP_MODEL = 256
@@ -24,7 +24,7 @@ CENTER_CROP_ALEXNET = 224
 model = None
 alexnet = None
 is_cuda_available = torch.cuda.is_available()
-device = torch.device("cuda" if is_cuda_available else "gpu")
+device = torch.device("cuda" if is_cuda_available else "cpu")
 logger.info("Using GPU: " + str(is_cuda_available))
 
 filenames = []

@@ -72,7 +72,7 @@ def main(args=None):
     handler_call = args is not None
     args = args or parser.parse_args()
     is_cuda_available = torch.cuda.is_available()
-    args.device = torch.device("cuda" if is_cuda_available else "gpu")
+    args.device = torch.device("cuda" if is_cuda_available else "cpu")
     writer = SummaryWriter()
 
     best_loss = float("Inf")
