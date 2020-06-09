@@ -101,6 +101,5 @@ def test(test_loader, model, criterion, output_dir, device):
         image = image.to(device)
         y_pred = model(image)
         loss = criterion(y_pred, image)
-        print(f"{filename} : Loss = {loss}")
         save_image(image, os.path.join(output_dir, filename + ext))
         save_image(y_pred, os.path.join(output_dir, filename + "_output" + ext))
