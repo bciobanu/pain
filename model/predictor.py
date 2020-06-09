@@ -3,7 +3,6 @@ import json
 import os
 import time
 
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
@@ -153,13 +152,6 @@ def main():
 
         annoy_lookup = AnnoyLookup(args.metadata_dir)
         res = annoy_lookup.get_neighbours(embedding)
-
-        for filename, distance in res:
-            plt.figure()
-            plt.title(str(distance))
-            image = plt.imread(os.path.join(args.image_dir, filename))
-            plt.imshow(image)
-        plt.show()
 
 
 if __name__ == "__main__":

@@ -6,7 +6,6 @@ import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.tensorboard import SummaryWriter
 
 from imagesearch.inputs import load_data
 from imagesearch.model import Autoencoder
@@ -73,7 +72,6 @@ def main(args=None):
     args = args or parser.parse_args()
     is_cuda_available = torch.cuda.is_available()
     args.device = torch.device("cuda" if is_cuda_available else "cpu")
-    writer = SummaryWriter()
 
     best_loss = float("Inf")
     model = Autoencoder().to(args.device)
@@ -154,14 +152,9 @@ def main(args=None):
             bestname=args.best_name or "model_best.pth",
             no_ckpt=args.no_ckpt or False,
         )
-        writer.add_scalars(
-            "Loss", {"train": train_loss, "validation": validation_loss}, epoch
-        )
 
     it = iter(train_loader)
     images, _ = it.__next__()
-    writer.add_graph(model, images.to(args.device))
-    writer.close()
 
 
 if __name__ == "__main__":

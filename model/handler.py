@@ -3,7 +3,6 @@ import ntpath
 import os
 from collections import Counter, deque
 
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
@@ -220,19 +219,3 @@ def train(
     args.no_ckpt = True
     args.best_name = model_path
     run_model_main(args)
-
-
-if __name__ == "__main__":
-    train("./data_overfit/train", model_path="./model_best_test.pth")
-    load("./data_overfit/train", model_path="./model_best_test.pth")
-    add_alexnet_image("./data/train/0.jpg")
-    add_alexnet_image("./data/train/1.jpg")
-    best = predict_("./data_overfit/test/2.jpg")
-    for filename, distance in best:
-        plt.figure()
-        plt.title(filename + ": " + str(distance))
-        path = os.path.join("./data_overfit/train/", filename)
-        if os.path.isfile(path):
-            image = plt.imread(path)
-            plt.imshow(image)
-    plt.show()
