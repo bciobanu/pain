@@ -1,7 +1,7 @@
 # -------------------- Build -------------------- 
 FROM erlang:21 as builder
-ENV LANG=C.UTF-8
-ENV MIX_ENV=dev
+
+ENV MIX_ENV=prod
 
 RUN set -xe && \
   ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/archive/v1.10.3.tar.gz" && \
@@ -51,12 +51,10 @@ RUN mix release --path /release
 
 # -------------------- Run -------------------- 
 FROM debian:stretch
-ENV LANG=C.UTF-8
 
-RUN apt-get update && apt-get install -y openssl python3
+RUN apt-get update && apt-get install -y openssl python3 inotify-tools
 
-ENV MIX_ENV=dev
-ENV PORT=4000
+ENV MIX_ENV=prod
 ENV ERLPORT_PYTHON=python3
 ENV PYTHONPATH=/usr/local/lib/python3.5/site-packages
 
@@ -68,5 +66,4 @@ WORKDIR /dashboard
 COPY --from=builder /release ./
 RUN chown -R nobody: ./
 
-EXPOSE ${PORT}
 ENTRYPOINT ["./bin/dashboard", "start"]

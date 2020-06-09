@@ -4,8 +4,9 @@ use Mix.Config
 config :dashboard, Dashboard.Repo,
   username: "postgres",
   password: "postgres",
-  database: "dashboard_dev",
-  hostname: "localhost",
+  database: "dashboard",
+  hostname: "0.0.0.0",
+  port: "5432",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -16,7 +17,7 @@ config :dashboard, Dashboard.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :dashboard, DashboardWeb.Endpoint,
-  http: [port: 4000],
+  http: [hostname: "0.0.0.0", port: 4000],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

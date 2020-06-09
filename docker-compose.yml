@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  db:
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: dashboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - db
