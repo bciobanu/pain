@@ -4,7 +4,9 @@ defmodule DashboardWeb.PageController do
 
   plug DashboardWeb.Plugs.EnsureAuthenticated when action in [:index, :new, :create]
 
-  @image_dir File.cwd!() |> Path.join("/priv/static/user_content")
+  def image_dir() do
+    :code.priv_dir(:dashboard) |> List.to_string() |> Path.join("/static/user_content")
+  end
 
   def index(conn, _params) do
     current_user = conn.assigns.current_user
@@ -23,12 +25,12 @@ defmodule DashboardWeb.PageController do
   end
 
   def absolute_image_path(image_name) do
-    Path.join(@image_dir, image_name)
+    Path.join(image_dir(), image_name)
   end
 
   def upload(upload) do
     image_name = Ecto.UUID.generate() <> Path.extname(upload.filename)
-    File.mkdir(@image_dir)
+    File.mkdir(image_dir())
     File.cp!(upload.path, absolute_image_path(image_name))
     image_name
   end

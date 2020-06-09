@@ -1,3 +1,7 @@
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
 import logging
 import ntpath
 import os
@@ -53,7 +57,10 @@ def generate_kdtree_(net, image_folder, center_crop, num_workers=4):
     image_embeddings = np.array([emb for _, emb in predictions])
     # normalize embeddings
     image_embeddings_norm = [emb / np.linalg.norm(emb) for emb in image_embeddings]
-    feature_length = len(image_embeddings_norm[0])
+    try:
+        feature_length = len(image_embeddings_norm[0])
+    except IndexError:
+        feature_length = 0
 
     filenames = image_names
     kd_tree = AnnoyIndex(feature_length)
@@ -79,12 +86,12 @@ def load(image_folder, model_path="./model_best.pth", num_workers=4):
         logger.info("=> loaded checkpoint")
     else:
         logger.error("no checkpoint found at '{}'".format(model_path))
-        return
     index_model = generate_kdtree_(
         model.encoder, image_folder, CENTER_CROP_MODEL, num_workers=num_workers
     )
 
     alexnet = models.alexnet(pretrained=True).to(device)
+    assert alexnet
     alexnet.classifier[6] = Identity().to(device)
     index_alexnet = deque(
         [

@@ -8,7 +8,10 @@ from PIL import Image
 class ImageFolderWithPaths(data.Dataset):
     def __init__(self, root, transform=None):
         self.root = root
-        self.imgs = list(os.listdir(root))
+        try:
+            self.imgs = list(os.listdir(root))
+        except FileNotFoundError:
+            self.imgs = []
         self.transform = transform
 
     def __getitem__(self, index):

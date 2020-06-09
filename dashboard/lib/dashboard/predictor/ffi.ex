@@ -4,7 +4,9 @@ defmodule Dashboard.Predictor.FFI do
   # computed at compile time, so cwd will be `pain/dashboard` expanded as an absolute path
   @model_path File.cwd!() |> Path.join("/../model") |> Path.expand()
 
-  @image_path File.cwd!() |> Path.join("/priv/static/user_content")
+  def image_path() do
+    :code.priv_dir(:dashboard) |> List.to_string() |> Path.join("/static/user_content")
+  end
 
   def start_link(state) do
     GenServer.start_link(__MODULE__, state, [])
@@ -13,7 +15,7 @@ defmodule Dashboard.Predictor.FFI do
   def init(_state) do
     {:ok, pid} = :python.start(python_path: @model_path |> to_charlist)
     state = %{pid: pid}
-    :python.call(state.pid, :handler, :load, [@image_path])
+    :python.call(state.pid, :handler, :load, [image_path()])
     {:ok, state}
   end
 
@@ -27,12 +29,12 @@ defmodule Dashboard.Predictor.FFI do
   end
 
   def handle_call(:train, _from, state) do
-    :python.call(state.pid, :handler, :train, [@image_path])
+    :python.call(state.pid, :handler, :train, [image_path()])
     {:reply, :ok, state}
   end
 
   def handle_call(:reload, _from, state) do
-    :python.call(state.pid, :handler, :load, [@image_path])
+    :python.call(state.pid, :handler, :load, [image_path()])
     {:reply, :ok, state}
   end
 
