@@ -1,0 +1,8 @@
+app
+dashboard/priv/static/user_content
+**/node_modules
+**/.idea
+**/.git
+**/.log
+**/*.pth
+**/runs
