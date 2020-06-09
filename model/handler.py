@@ -1,7 +1,4 @@
 import ssl
-
-ssl._create_default_https_context = ssl._create_unverified_context
-
 import logging
 import ntpath
 import os
@@ -17,6 +14,8 @@ from torchvision import models
 from imagesearch.inputs import get_transformation, load_data
 from imagesearch.model import Autoencoder
 from run_model import main as run_model_main
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
