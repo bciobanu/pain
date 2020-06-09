@@ -7,11 +7,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 from annoy import AnnoyIndex
-from PIL import Image
 from torchvision import models
 from tqdm import tqdm
 
-from imagesearch.inputs import get_transformation, load_data
+from imagesearch.inputs import load_data
 from imagesearch.model import Autoencoder
 
 
@@ -32,9 +31,6 @@ parser.add_argument(
     help="Where to store kd-tree and metadata",
     default="./predictor_metadata/",
     required=True,
-)
-parser.add_argument(
-    "--query-path", help="Path to the image we want to do reverse search on"
 )
 parser.add_argument(
     "--tree-count",
@@ -134,24 +130,6 @@ def main():
         nn_search.build(args.tree_count)
         nn_search.save("{}/index.ann".format(args.metadata_dir))
         print("Successfully indexed {} images".format(len(filenames)))
-
-    if args.query_path:
-        img = Image.open(args.query_path).convert("RGB")
-        transform = get_transformation(center_crop=args.center_crop)
-        img = transform(img)
-        img = img.unsqueeze(0)
-        img = img.cuda()
-        embedding = None
-        with torch.no_grad():
-            embedding = (
-                (model(img) if args.use_alexnet else model.encoder(img))
-                .cpu()
-                .numpy()
-                .flatten()
-            )
-
-        annoy_lookup = AnnoyLookup(args.metadata_dir)
-        res = annoy_lookup.get_neighbours(embedding)
 
 
 if __name__ == "__main__":

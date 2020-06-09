@@ -1,10 +1,6 @@
 from __future__ import print_function
 
-import os
 import time
-
-from torchvision.utils import save_image
-
 from imagesearch.util import AverageMeter
 
 
@@ -89,17 +85,3 @@ def validate(val_loader, model, criterion, print_freq, device):
 
     print(" * Loss {loss.avg:.3f}".format(loss=losses))
     return losses.avg
-
-
-def test(test_loader, model, criterion, output_dir, device):
-    # switch to eval mode
-    model.eval()
-
-    for i, (image, path) in enumerate(test_loader):
-        filename = os.path.basename(path[0])
-        filename, ext = os.path.splitext(filename)
-        image = image.to(device)
-        y_pred = model(image)
-        loss = criterion(y_pred, image)
-        save_image(image, os.path.join(output_dir, filename + ext))
-        save_image(y_pred, os.path.join(output_dir, filename + "_output" + ext))

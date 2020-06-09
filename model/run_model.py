@@ -9,7 +9,7 @@ import torch.optim as optim
 
 from imagesearch.inputs import load_data
 from imagesearch.model import Autoencoder
-from imagesearch.trainer import test, train, validate
+from imagesearch.trainer import train, validate
 from imagesearch.util import save_checkpoint
 
 parser = argparse.ArgumentParser(description="Image reverse search")
@@ -62,9 +62,6 @@ parser.add_argument(
     action="store_true",
     help="evaluate model on validation set",
 )
-parser.add_argument(
-    "--test", dest="test", action="store_true", help="evaluate model on test set"
-)
 
 
 def main(args=None):
@@ -100,34 +97,21 @@ def main(args=None):
     if not handler_call:
         traindir = os.path.join(args.data, "train")
         valdir = os.path.join(args.data, "dev")
-        testdir = os.path.join(args.data, "test")
     else:
         traindir = args.data
         valdir = args.data
-        testdir = args.data
 
     train_loader = load_data(
         traindir, num_workers=args.workers, batch_size=args.batch_size
     )
     val_loader = load_data(valdir, num_workers=args.workers, batch_size=args.batch_size)
-    test_loader = load_data(testdir, num_workers=args.workers)
-
-    if args.test:
-        test(
-            test_loader,
-            model,
-            criterion,
-            os.path.join(args.data, "output_test"),
-            args.device,
-        )
-        return
 
     if args.evaluate:
         validate(val_loader, model, criterion, args.print_freq, args.device)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
-        train_loss = train(
+        train(
             train_loader,
             model,
             criterion,
