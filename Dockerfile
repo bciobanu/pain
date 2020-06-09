@@ -66,4 +66,5 @@ WORKDIR /dashboard
 COPY --from=builder /release ./
 RUN chown -R nobody: ./
 
-ENTRYPOINT ["./bin/dashboard", "start"]
+COPY deploy.sh ./deploy.sh
+ENTRYPOINT ["sh", "./deploy.sh"]
