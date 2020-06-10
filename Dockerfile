@@ -1,17 +1,19 @@
 # -------------------- Build -------------------- 
 FROM erlang:21 as builder
 
-ENV MIX_ENV=prod
+ARG MIX_ENV=prod
+ARG ELIXIR=v1.10.3
+ENV MIX_ENV=${MIX_ENV}
 
-RUN set -xe && \
-  ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/archive/v1.10.3.tar.gz" && \
-  curl -fSL -o elixir-src.tar.gz $ELIXIR_DOWNLOAD_URL && \
-  mkdir -p /usr/local/src/elixir && \
-  tar -xzC /usr/local/src/elixir --strip-components=1 -f elixir-src.tar.gz && \
-  rm elixir-src.tar.gz && \
-  cd /usr/local/src/elixir && \
-  make install clean
+# Build Elixir
+ADD https://github.com/elixir-lang/elixir/archive/${ELIXIR}.tar.gz elixir-src.tar.gz
+RUN mkdir -p /usr/local/src/elixir && \
+    tar -xzC /usr/local/src/elixir --strip-component=1 -f elixir-src.tar.gz && \
+    rm elixir-src.tar.gz && \
+    cd /usr/local/src/elixir && \
+    make install
 
+# Add NPM repo
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update && apt-get install -y \
     nodejs \
@@ -23,11 +25,26 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     zlib1g-dev
 
+# Upgrade pip utils
 RUN pip3 install --upgrade pip setuptools wheel
 
-COPY model ./model/
-RUN cd model && pip3 install --prefix=/py_deps -r requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
+# Install model dependencies
+RUN mkdir /model
+WORKDIR /model
+ 
+# Copy requirements separately so that the cache is invalidated only when it changes
+COPY model/requirements.txt ./
+RUN pip3 install \
+    --quiet \
+    --prefix=/py_deps \
+    --no-warn-script-location \
+    -r requirements.txt \
+    -f https://download.pytorch.org/whl/torch_stable.html
 
+# Copy the rest of the model files
+COPY model .
+
+WORKDIR /
 RUN mkdir /dashboard
 WORKDIR /dashboard
 
@@ -37,12 +54,22 @@ RUN mix local.hex --force && \
 COPY dashboard/mix.exs dashboard/mix.lock ./
 RUN mix deps.get
 
-COPY dashboard/assets ./assets/
-RUN cd assets && npm install && npm run deploy
+# Build assets
+RUN mkdir assets
+WORKDIR /dashboard/assets
 
-COPY dashboard/config ./config
-COPY dashboard/lib ./lib
-COPY dashboard/priv ./priv
+# Copy and install packages separately from the other assets to cache them
+COPY dashboard/assets/package.json dashboard/assets/package-lock.json ./
+RUN npm ci --progress=false --no-audit --loglevel=error
+
+COPY dashboard/assets ./
+RUN npm run deploy
+
+WORKDIR /dashboard
+
+COPY dashboard/config config
+COPY dashboard/lib lib
+COPY dashboard/priv priv
 
 RUN mix do compile
 RUN mix phx.digest
@@ -54,7 +81,6 @@ FROM debian:stretch
 
 RUN apt-get update && apt-get install -y openssl python3 inotify-tools
 
-ENV MIX_ENV=prod
 ENV ERLPORT_PYTHON=python3
 ENV PYTHONPATH=/usr/local/lib/python3.5/site-packages
 
@@ -63,8 +89,8 @@ COPY --from=builder /py_deps /usr/local
 
 RUN mkdir /dashboard
 WORKDIR /dashboard
-COPY --from=builder /release ./
-RUN chown -R nobody: ./
+COPY --from=builder /release .
+RUN chown -R nobody: .
 
-COPY deploy.sh ./deploy.sh
+COPY deploy.sh .
 ENTRYPOINT ["sh", "./deploy.sh"]
