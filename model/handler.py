@@ -158,7 +158,7 @@ def predict_(image_path, top_n=5):
         zipped = zip(items, distances)
         sorted_list = sorted(zipped, key=lambda t: t[1])
         best_from_model = [(filenames[idx], dst) for idx, dst in sorted_list]
-    except:
+    except Exception:
         best_from_model = []
 
     # top n AlexNet
@@ -171,7 +171,7 @@ def predict_(image_path, top_n=5):
             )
             zipped = zip(items, distances)
             best_from_alexnet.extend(zipped)
-        except:
+        except Exception:
             ...
     best_from_alexnet = sorted(best_from_alexnet, key=lambda t: t[1])
     best_from_alexnet = [(filenames[idx], dst) for idx, dst in best_from_alexnet][
