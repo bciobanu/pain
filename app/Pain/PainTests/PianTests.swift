@@ -1,7 +1,16 @@
+//
+//  TestApp1Tests.swift
+//  TestApp1Tests
+//
+//  Created by Andrei Popa on 30/03/2020.
+//  Copyright © 2020 Andrei Popa. All rights reserved.
+//
+
 import XCTest
 @testable import Pain
 
 class PainTests: XCTestCase {
+
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -21,4 +30,5 @@ class PainTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+
 }

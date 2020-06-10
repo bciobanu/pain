@@ -7,66 +7,58 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B3222DA7242A33EF00F730D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3222DA6242A33EF00F730D4 /* AppDelegate.swift */; };
-		B3222DA9242A33EF00F730D4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3222DA8242A33EF00F730D4 /* SceneDelegate.swift */; };
-		B3222DAB242A33EF00F730D4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3222DAA242A33EF00F730D4 /* ContentView.swift */; };
-		B3222DAD242A33F000F730D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3222DAC242A33F000F730D4 /* Assets.xcassets */; };
-		B3222DB0242A33F000F730D4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3222DAF242A33F000F730D4 /* Preview Assets.xcassets */; };
-		B3222DB3242A33F000F730D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3222DB1242A33F000F730D4 /* LaunchScreen.storyboard */; };
-		B3222DBE242A33F000F730D4 /* PainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3222DBD242A33F000F730D4 /* PainTests.swift */; };
-		B3222DC9242A33F000F730D4 /* PainUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3222DC8242A33F000F730D4 /* PainUITests.swift */; };
+		75AB6B38248EBC5100A58113 /* PaintingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AB6B37248EBC5100A58113 /* PaintingViewController.swift */; };
+		75CC75B924338AAD000C9009 /* RectangleDetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CC75B824338AAD000C9009 /* RectangleDetectionViewController.swift */; };
+		75E00D9C243220A60021F198 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E00D9B243220A60021F198 /* AppDelegate.swift */; };
+		75E00D9E243220A60021F198 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E00D9D243220A60021F198 /* SceneDelegate.swift */; };
+		75E00DA0243220A60021F198 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E00D9F243220A60021F198 /* CameraViewController.swift */; };
+		75E00DA3243220A60021F198 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75E00DA1243220A60021F198 /* Main.storyboard */; };
+		75E00DA5243220A70021F198 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75E00DA4243220A70021F198 /* Assets.xcassets */; };
+		75E00DA8243220A70021F198 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75E00DA6243220A70021F198 /* LaunchScreen.storyboard */; };
+		75E00DB3243220A70021F198 /* PianTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E00DB2243220A70021F198 /* PianTests.swift */; };
+		75E8CE92248E755500948C17 /* PictureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E8CE91248E755500948C17 /* PictureTableViewCell.swift */; };
+		75E8CE94248E82F600948C17 /* PaintingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E8CE93248E82F600948C17 /* PaintingTableViewController.swift */; };
+		75E8CE98248E86BA00948C17 /* Painting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E8CE97248E86BA00948C17 /* Painting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B3222DBA242A33F000F730D4 /* PBXContainerItemProxy */ = {
+		75E00DAF243220A70021F198 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = B3222D9B242A33EF00F730D4 /* Project object */;
+			containerPortal = 75E00D90243220A60021F198 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = B3222DA2242A33EF00F730D4;
-			remoteInfo = Pain;
-		};
-		B3222DC5242A33F000F730D4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B3222D9B242A33EF00F730D4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B3222DA2242A33EF00F730D4;
-			remoteInfo = Pain;
+			remoteGlobalIDString = 75E00D97243220A60021F198;
+			remoteInfo = TestApp1;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B3222DA3242A33EF00F730D4 /* Pain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pain.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3222DA6242A33EF00F730D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B3222DA8242A33EF00F730D4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B3222DAA242A33EF00F730D4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		B3222DAC242A33F000F730D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B3222DAF242A33F000F730D4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		B3222DB2242A33F000F730D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B3222DB4242A33F000F730D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B3222DB9242A33F000F730D4 /* PainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3222DBD242A33F000F730D4 /* PainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainTests.swift; sourceTree = "<group>"; };
-		B3222DBF242A33F000F730D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B3222DC4242A33F000F730D4 /* PainUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PainUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3222DC8242A33F000F730D4 /* PainUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainUITests.swift; sourceTree = "<group>"; };
-		B3222DCA242A33F000F730D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75AB6B37248EBC5100A58113 /* PaintingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintingViewController.swift; sourceTree = "<group>"; };
+		75CC75B824338AAD000C9009 /* RectangleDetectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangleDetectionViewController.swift; sourceTree = "<group>"; };
+		75E00D98243220A60021F198 /* Pain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		75E00D9B243220A60021F198 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		75E00D9D243220A60021F198 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		75E00D9F243220A60021F198 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		75E00DA2243220A60021F198 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		75E00DA4243220A70021F198 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		75E00DA7243220A70021F198 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		75E00DA9243220A70021F198 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75E00DAE243220A70021F198 /* PainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75E00DB2243220A70021F198 /* PianTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianTests.swift; sourceTree = "<group>"; };
+		75E00DB4243220A70021F198 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75E8CE91248E755500948C17 /* PictureTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureTableViewCell.swift; sourceTree = "<group>"; };
+		75E8CE93248E82F600948C17 /* PaintingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintingTableViewController.swift; sourceTree = "<group>"; };
+		75E8CE97248E86BA00948C17 /* Painting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Painting.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		B3222DA0242A33EF00F730D4 /* Frameworks */ = {
+		75E00D95243220A60021F198 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B3222DB6242A33F000F730D4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B3222DC1242A33F000F730D4 /* Frameworks */ = {
+		75E00DAB243220A70021F198 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -76,146 +68,110 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B3222D9A242A33EF00F730D4 = {
+		75E00D8F243220A60021F198 = {
 			isa = PBXGroup;
 			children = (
-				B3222DA5242A33EF00F730D4 /* Pain */,
-				B3222DBC242A33F000F730D4 /* PainTests */,
-				B3222DC7242A33F000F730D4 /* PainUITests */,
-				B3222DA4242A33EF00F730D4 /* Products */,
+				75E00D9A243220A60021F198 /* Pain */,
+				75E00DB1243220A70021F198 /* PainTests */,
+				75E00D99243220A60021F198 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		B3222DA4242A33EF00F730D4 /* Products */ = {
+		75E00D99243220A60021F198 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B3222DA3242A33EF00F730D4 /* Pain.app */,
-				B3222DB9242A33F000F730D4 /* PainTests.xctest */,
-				B3222DC4242A33F000F730D4 /* PainUITests.xctest */,
+				75E00D98243220A60021F198 /* Pain.app */,
+				75E00DAE243220A70021F198 /* PainTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B3222DA5242A33EF00F730D4 /* Pain */ = {
+		75E00D9A243220A60021F198 /* Pain */ = {
 			isa = PBXGroup;
 			children = (
-				B3222DA6242A33EF00F730D4 /* AppDelegate.swift */,
-				B3222DA8242A33EF00F730D4 /* SceneDelegate.swift */,
-				B3222DAA242A33EF00F730D4 /* ContentView.swift */,
-				B3222DAC242A33F000F730D4 /* Assets.xcassets */,
-				B3222DB1242A33F000F730D4 /* LaunchScreen.storyboard */,
-				B3222DB4242A33F000F730D4 /* Info.plist */,
-				B3222DAE242A33F000F730D4 /* Preview Content */,
+				75E00D9B243220A60021F198 /* AppDelegate.swift */,
+				75E00D9D243220A60021F198 /* SceneDelegate.swift */,
+				75E00D9F243220A60021F198 /* CameraViewController.swift */,
+				75E00DA1243220A60021F198 /* Main.storyboard */,
+				75E8CE93248E82F600948C17 /* PaintingTableViewController.swift */,
+				75AB6B37248EBC5100A58113 /* PaintingViewController.swift */,
+				75E8CE91248E755500948C17 /* PictureTableViewCell.swift */,
+				75E8CE97248E86BA00948C17 /* Painting.swift */,
+				75CC75B824338AAD000C9009 /* RectangleDetectionViewController.swift */,
+				75E00DA4243220A70021F198 /* Assets.xcassets */,
+				75E00DA6243220A70021F198 /* LaunchScreen.storyboard */,
+				75E00DA9243220A70021F198 /* Info.plist */,
 			);
 			path = Pain;
 			sourceTree = "<group>";
 		};
-		B3222DAE242A33F000F730D4 /* Preview Content */ = {
+		75E00DB1243220A70021F198 /* PainTests */ = {
 			isa = PBXGroup;
 			children = (
-				B3222DAF242A33F000F730D4 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		B3222DBC242A33F000F730D4 /* PainTests */ = {
-			isa = PBXGroup;
-			children = (
-				B3222DBD242A33F000F730D4 /* PainTests.swift */,
-				B3222DBF242A33F000F730D4 /* Info.plist */,
+				75E00DB2243220A70021F198 /* PianTests.swift */,
+				75E00DB4243220A70021F198 /* Info.plist */,
 			);
 			path = PainTests;
-			sourceTree = "<group>";
-		};
-		B3222DC7242A33F000F730D4 /* PainUITests */ = {
-			isa = PBXGroup;
-			children = (
-				B3222DC8242A33F000F730D4 /* PainUITests.swift */,
-				B3222DCA242A33F000F730D4 /* Info.plist */,
-			);
-			path = PainUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B3222DA2242A33EF00F730D4 /* Pain */ = {
+		75E00D97243220A60021F198 /* Pain */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B3222DCD242A33F000F730D4 /* Build configuration list for PBXNativeTarget "Pain" */;
+			buildConfigurationList = 75E00DB7243220A70021F198 /* Build configuration list for PBXNativeTarget "Pain" */;
 			buildPhases = (
-				B3222D9F242A33EF00F730D4 /* Sources */,
-				B3222DA0242A33EF00F730D4 /* Frameworks */,
-				B3222DA1242A33EF00F730D4 /* Resources */,
+				75E00D94243220A60021F198 /* Sources */,
+				75E00D95243220A60021F198 /* Frameworks */,
+				75E00D96243220A60021F198 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Pain;
-			productName = Pain;
-			productReference = B3222DA3242A33EF00F730D4 /* Pain.app */;
+			productName = TestApp1;
+			productReference = 75E00D98243220A60021F198 /* Pain.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B3222DB8242A33F000F730D4 /* PainTests */ = {
+		75E00DAD243220A70021F198 /* PainTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B3222DD0242A33F000F730D4 /* Build configuration list for PBXNativeTarget "PainTests" */;
+			buildConfigurationList = 75E00DBA243220A70021F198 /* Build configuration list for PBXNativeTarget "PainTests" */;
 			buildPhases = (
-				B3222DB5242A33F000F730D4 /* Sources */,
-				B3222DB6242A33F000F730D4 /* Frameworks */,
-				B3222DB7242A33F000F730D4 /* Resources */,
+				75E00DAA243220A70021F198 /* Sources */,
+				75E00DAB243220A70021F198 /* Frameworks */,
+				75E00DAC243220A70021F198 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				B3222DBB242A33F000F730D4 /* PBXTargetDependency */,
+				75E00DB0243220A70021F198 /* PBXTargetDependency */,
 			);
 			name = PainTests;
-			productName = PainTests;
-			productReference = B3222DB9242A33F000F730D4 /* PainTests.xctest */;
+			productName = TestApp1Tests;
+			productReference = 75E00DAE243220A70021F198 /* PainTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		B3222DC3242A33F000F730D4 /* PainUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B3222DD3242A33F000F730D4 /* Build configuration list for PBXNativeTarget "PainUITests" */;
-			buildPhases = (
-				B3222DC0242A33F000F730D4 /* Sources */,
-				B3222DC1242A33F000F730D4 /* Frameworks */,
-				B3222DC2242A33F000F730D4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B3222DC6242A33F000F730D4 /* PBXTargetDependency */,
-			);
-			name = PainUITests;
-			productName = PainUITests;
-			productReference = B3222DC4242A33F000F730D4 /* PainUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		B3222D9B242A33EF00F730D4 /* Project object */ = {
+		75E00D90243220A60021F198 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1120;
-				LastUpgradeCheck = 1120;
-				ORGANIZATIONNAME = "Darius Marian";
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "Andrei Popa";
 				TargetAttributes = {
-					B3222DA2242A33EF00F730D4 = {
-						CreatedOnToolsVersion = 11.2.1;
+					75E00D97243220A60021F198 = {
+						CreatedOnToolsVersion = 11.3.1;
 					};
-					B3222DB8242A33F000F730D4 = {
-						CreatedOnToolsVersion = 11.2.1;
-						TestTargetID = B3222DA2242A33EF00F730D4;
-					};
-					B3222DC3242A33F000F730D4 = {
-						CreatedOnToolsVersion = 11.2.1;
-						TestTargetID = B3222DA2242A33EF00F730D4;
+					75E00DAD243220A70021F198 = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = 75E00D97243220A60021F198;
 					};
 				};
 			};
-			buildConfigurationList = B3222D9E242A33EF00F730D4 /* Build configuration list for PBXProject "Pain" */;
+			buildConfigurationList = 75E00D93243220A60021F198 /* Build configuration list for PBXProject "Pain" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -223,37 +179,29 @@
 				en,
 				Base,
 			);
-			mainGroup = B3222D9A242A33EF00F730D4;
-			productRefGroup = B3222DA4242A33EF00F730D4 /* Products */;
+			mainGroup = 75E00D8F243220A60021F198;
+			productRefGroup = 75E00D99243220A60021F198 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B3222DA2242A33EF00F730D4 /* Pain */,
-				B3222DB8242A33F000F730D4 /* PainTests */,
-				B3222DC3242A33F000F730D4 /* PainUITests */,
+				75E00D97243220A60021F198 /* Pain */,
+				75E00DAD243220A70021F198 /* PainTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		B3222DA1242A33EF00F730D4 /* Resources */ = {
+		75E00D96243220A60021F198 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3222DB3242A33F000F730D4 /* LaunchScreen.storyboard in Resources */,
-				B3222DB0242A33F000F730D4 /* Preview Assets.xcassets in Resources */,
-				B3222DAD242A33F000F730D4 /* Assets.xcassets in Resources */,
+				75E00DA8243220A70021F198 /* LaunchScreen.storyboard in Resources */,
+				75E00DA5243220A70021F198 /* Assets.xcassets in Resources */,
+				75E00DA3243220A60021F198 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B3222DB7242A33F000F730D4 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B3222DC2242A33F000F730D4 /* Resources */ = {
+		75E00DAC243220A70021F198 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -263,52 +211,52 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		B3222D9F242A33EF00F730D4 /* Sources */ = {
+		75E00D94243220A60021F198 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3222DA7242A33EF00F730D4 /* AppDelegate.swift in Sources */,
-				B3222DA9242A33EF00F730D4 /* SceneDelegate.swift in Sources */,
-				B3222DAB242A33EF00F730D4 /* ContentView.swift in Sources */,
+				75AB6B38248EBC5100A58113 /* PaintingViewController.swift in Sources */,
+				75CC75B924338AAD000C9009 /* RectangleDetectionViewController.swift in Sources */,
+				75E00DA0243220A60021F198 /* CameraViewController.swift in Sources */,
+				75E00D9C243220A60021F198 /* AppDelegate.swift in Sources */,
+				75E8CE98248E86BA00948C17 /* Painting.swift in Sources */,
+				75E8CE92248E755500948C17 /* PictureTableViewCell.swift in Sources */,
+				75E00D9E243220A60021F198 /* SceneDelegate.swift in Sources */,
+				75E8CE94248E82F600948C17 /* PaintingTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B3222DB5242A33F000F730D4 /* Sources */ = {
+		75E00DAA243220A70021F198 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3222DBE242A33F000F730D4 /* PainTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B3222DC0242A33F000F730D4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B3222DC9242A33F000F730D4 /* PainUITests.swift in Sources */,
+				75E00DB3243220A70021F198 /* PianTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B3222DBB242A33F000F730D4 /* PBXTargetDependency */ = {
+		75E00DB0243220A70021F198 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B3222DA2242A33EF00F730D4 /* Pain */;
-			targetProxy = B3222DBA242A33F000F730D4 /* PBXContainerItemProxy */;
-		};
-		B3222DC6242A33F000F730D4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B3222DA2242A33EF00F730D4 /* Pain */;
-			targetProxy = B3222DC5242A33F000F730D4 /* PBXContainerItemProxy */;
+			target = 75E00D97243220A60021F198 /* Pain */;
+			targetProxy = 75E00DAF243220A70021F198 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B3222DB1242A33F000F730D4 /* LaunchScreen.storyboard */ = {
+		75E00DA1243220A60021F198 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				B3222DB2242A33F000F730D4 /* Base */,
+				75E00DA2243220A60021F198 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		75E00DA6243220A70021F198 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				75E00DA7243220A70021F198 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -316,7 +264,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		B3222DCB242A33F000F730D4 /* Debug */ = {
+		75E00DB5243220A70021F198 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -366,7 +314,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -376,7 +324,7 @@
 			};
 			name = Debug;
 		};
-		B3222DCC242A33F000F730D4 /* Release */ = {
+		75E00DB6243220A70021F198 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -420,7 +368,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -430,164 +378,117 @@
 			};
 			name = Release;
 		};
-		B3222DCE242A33F000F730D4 /* Debug */ = {
+		75E00DB8243220A70021F198 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Pain/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
+				DEVELOPMENT_TEAM = ZTSWCXY5N7;
 				INFOPLIST_FILE = Pain/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pain.Pain;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.andreiinet.Pain;
+				PRODUCT_NAME = Pain;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		B3222DCF242A33F000F730D4 /* Release */ = {
+		75E00DB9243220A70021F198 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Pain/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
+				DEVELOPMENT_TEAM = ZTSWCXY5N7;
 				INFOPLIST_FILE = Pain/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pain.Pain;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.andreiinet.Pain;
+				PRODUCT_NAME = Pain;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		B3222DD1242A33F000F730D4 /* Debug */ = {
+		75E00DBB243220A70021F198 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = PainTests/Info.plist;
+				INFOPLIST_FILE = TestApp1Tests/Painnfo.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pain.PainTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.TestApp1Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pain.app/Pain";
+				TEST_HOST = "$(BUPainLT_PRODUCTS_DPainR)/Pain.app/Pain";
 			};
 			name = Debug;
 		};
-		B3222DD2242A33F000F730D4 /* Release */ = {
+		75E00DBC243220A70021F198 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = PainTests/Info.plist;
+				INFOPLIST_FILE = TestApp1Tests/Painnfo.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pain.PainTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.TestApp1Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pain.app/Pain";
-			};
-			name = Release;
-		};
-		B3222DD4242A33F000F730D4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = PainUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = pain.PainUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Pain;
-			};
-			name = Debug;
-		};
-		B3222DD5242A33F000F730D4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = PainUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = pain.PainUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Pain;
+				TEST_HOST = "$(BUPainLT_PRODUCTS_DPainR)/Pain.app/Pain";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B3222D9E242A33EF00F730D4 /* Build configuration list for PBXProject "Pain" */ = {
+		75E00D93243220A60021F198 /* Build configuration list for PBXProject "Pain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B3222DCB242A33F000F730D4 /* Debug */,
-				B3222DCC242A33F000F730D4 /* Release */,
+				75E00DB5243220A70021F198 /* Debug */,
+				75E00DB6243220A70021F198 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B3222DCD242A33F000F730D4 /* Build configuration list for PBXNativeTarget "Pain" */ = {
+		75E00DB7243220A70021F198 /* Build configuration list for PBXNativeTarget "Pain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B3222DCE242A33F000F730D4 /* Debug */,
-				B3222DCF242A33F000F730D4 /* Release */,
+				75E00DB8243220A70021F198 /* Debug */,
+				75E00DB9243220A70021F198 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B3222DD0242A33F000F730D4 /* Build configuration list for PBXNativeTarget "PainTests" */ = {
+		75E00DBA243220A70021F198 /* Build configuration list for PBXNativeTarget "PainTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B3222DD1242A33F000F730D4 /* Debug */,
-				B3222DD2242A33F000F730D4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B3222DD3242A33F000F730D4 /* Build configuration list for PBXNativeTarget "PainUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B3222DD4242A33F000F730D4 /* Debug */,
-				B3222DD5242A33F000F730D4 /* Release */,
+				75E00DBB243220A70021F198 /* Debug */,
+				75E00DBC243220A70021F198 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = B3222D9B242A33EF00F730D4 /* Project object */;
+	rootObject = 75E00D90243220A60021F198 /* Project object */;
 }
