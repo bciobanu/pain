@@ -110,6 +110,7 @@ def main(args=None):
         validate(val_loader, model, criterion, args.print_freq, args.device)
         return
 
+    cnt_not_better = 0
     for epoch in range(args.start_epoch, args.epochs):
         train(
             train_loader,
@@ -123,8 +124,14 @@ def main(args=None):
         validation_loss = validate(
             val_loader, model, criterion, args.print_freq, args.device
         )
-        is_best = validation_loss < best_loss
-        best_loss = min(best_loss, validation_loss)
+        if validation_loss < best_loss:
+            is_best = True
+            best_loss = validation_loss
+            cnt_not_better = 0
+        else:
+            cnt_not_better += 1
+            if cnt_not_better > 10:
+                break
         save_checkpoint(
             {
                 "epoch": epoch + 1,
@@ -136,9 +143,6 @@ def main(args=None):
             bestname=args.best_name or "model_best.pth",
             no_ckpt=args.no_ckpt or False,
         )
-
-    it = iter(train_loader)
-    images, _ = it.__next__()
 
 
 if __name__ == "__main__":

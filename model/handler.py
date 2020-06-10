@@ -150,7 +150,7 @@ def predict_(image_path, top_n=5):
     global filenames
 
     # top n Model
-    if model and index_model:
+    try:
         model_emb = get_image_emb_(model.encoder, image_path, CENTER_CROP_MODEL)
         items, distances = index_model.get_nns_by_vector(
             model_emb, top_n, include_distances=True
@@ -158,18 +158,21 @@ def predict_(image_path, top_n=5):
         zipped = zip(items, distances)
         sorted_list = sorted(zipped, key=lambda t: t[1])
         best_from_model = [(filenames[idx], dst) for idx, dst in sorted_list]
-    else:
+    except:
         best_from_model = []
 
     # top n AlexNet
     alexnet_emb = get_image_emb_(alexnet, image_path, CENTER_CROP_ALEXNET)
     best_from_alexnet = []
     for kd in index_alexnet:
-        items, distances = kd.get_nns_by_vector(
-            alexnet_emb, top_n, include_distances=True
-        )
-        zipped = zip(items, distances)
-        best_from_alexnet.extend(zipped)
+        try:
+            items, distances = kd.get_nns_by_vector(
+                alexnet_emb, top_n, include_distances=True
+            )
+            zipped = zip(items, distances)
+            best_from_alexnet.extend(zipped)
+        except:
+            ...
     best_from_alexnet = sorted(best_from_alexnet, key=lambda t: t[1])
     best_from_alexnet = [(filenames[idx], dst) for idx, dst in best_from_alexnet][
         :top_n

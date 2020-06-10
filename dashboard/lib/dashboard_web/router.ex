@@ -11,7 +11,7 @@ defmodule DashboardWeb.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["html"]
   end
 
   scope "/", DashboardWeb do
@@ -24,6 +24,13 @@ defmodule DashboardWeb.Router do
     delete "/signout", SessionController, :delete
 
     resources "/register", RegisterController, only: [:new, :create]
+  end
+
+  scope "/api", DashboardWeb do
+    pipe_through :api
+
+    resources "/predict", PredictorController, only: [:create]
+    post "/train", PredictorController, :train
   end
 
   # Other scopes may use custom stacks.
