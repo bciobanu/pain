@@ -1,23 +1,6 @@
-# -------------------- Build -------------------- 
-FROM erlang:21 as builder
-
-ARG MIX_ENV=prod
-ARG ELIXIR=v1.10.3
-ENV MIX_ENV=${MIX_ENV}
-
-# Build Elixir
-ADD https://github.com/elixir-lang/elixir/archive/${ELIXIR}.tar.gz elixir-src.tar.gz
-RUN mkdir -p /usr/local/src/elixir && \
-    tar -xzC /usr/local/src/elixir --strip-component=1 -f elixir-src.tar.gz && \
-    rm elixir-src.tar.gz && \
-    cd /usr/local/src/elixir && \
-    make install
-
-# Add NPM repo
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+# -------------------- Python Modules --------------------
+FROM debian:stretch as python-modules
 RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
     python3 \
     python3-dev \
     python3-pip \
@@ -27,10 +10,6 @@ RUN apt-get update && apt-get install -y \
 
 # Upgrade pip utils
 RUN pip3 install --upgrade pip setuptools wheel
-
-# Install model dependencies
-RUN mkdir /model
-WORKDIR /model
  
 # Copy requirements separately so that the cache is invalidated only when it changes
 COPY model/requirements.txt ./
@@ -41,8 +20,20 @@ RUN pip3 install \
     -r requirements.txt \
     -f https://download.pytorch.org/whl/torch_stable.html
 
-# Copy the rest of the model files
-COPY model .
+# -------------------- Build -------------------- 
+FROM erlang:21 as builder
+
+ARG MIX_ENV=prod
+ARG ELIXIR=v1.10.3
+ENV MIX_ENV=${MIX_ENV}
+
+# Elixir
+ADD https://github.com/elixir-lang/elixir/releases/download/${ELIXIR}/Precompiled.zip elixir.zip
+RUN unzip elixir.zip
+
+ENV PATH="/elixir/bin:${PATH}"
+
+COPY model model
 
 WORKDIR /
 RUN mkdir /dashboard
@@ -54,9 +45,13 @@ RUN mix local.hex --force && \
 COPY dashboard/mix.exs dashboard/mix.lock ./
 RUN mix deps.get
 
+# Add NPM repo
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs npm
+
 # Build assets
 RUN mkdir assets
-WORKDIR /dashboard/assets
+WORKDIR assets
 
 # Copy and install packages separately from the other assets to cache them
 COPY dashboard/assets/package.json dashboard/assets/package-lock.json ./
@@ -85,7 +80,7 @@ ENV ERLPORT_PYTHON=python3
 ENV PYTHONPATH=/usr/local/lib/python3.5/site-packages
 
 COPY --from=builder /model /model
-COPY --from=builder /py_deps /usr/local
+COPY --from=python-modules /py_deps /usr/local
 
 RUN mkdir /dashboard
 WORKDIR /dashboard
