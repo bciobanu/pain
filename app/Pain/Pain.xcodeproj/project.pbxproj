@@ -68,6 +68,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7572DF6A249280E500E5A1E1 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				7572DF6C2492810500E5A1E1 /* PaintingDisplay */,
+				7572DF6B249280FD00E5A1E1 /* Camera */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
+		7572DF6B249280FD00E5A1E1 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				75E00D9F243220A60021F198 /* CameraViewController.swift */,
+				75CC75B824338AAD000C9009 /* RectangleDetectionViewController.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		7572DF6C2492810500E5A1E1 /* PaintingDisplay */ = {
+			isa = PBXGroup;
+			children = (
+				75E8CE93248E82F600948C17 /* PaintingTableViewController.swift */,
+				75AB6B37248EBC5100A58113 /* PaintingViewController.swift */,
+				75E8CE91248E755500948C17 /* PictureTableViewCell.swift */,
+			);
+			path = PaintingDisplay;
+			sourceTree = "<group>";
+		};
+		7572DF6D2492814100E5A1E1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				75E8CE97248E86BA00948C17 /* Painting.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		75E00D8F243220A60021F198 = {
 			isa = PBXGroup;
 			children = (
@@ -89,15 +125,11 @@
 		75E00D9A243220A60021F198 /* Pain */ = {
 			isa = PBXGroup;
 			children = (
+				7572DF6D2492814100E5A1E1 /* Model */,
+				7572DF6A249280E500E5A1E1 /* Interface */,
 				75E00D9B243220A60021F198 /* AppDelegate.swift */,
 				75E00D9D243220A60021F198 /* SceneDelegate.swift */,
-				75E00D9F243220A60021F198 /* CameraViewController.swift */,
 				75E00DA1243220A60021F198 /* Main.storyboard */,
-				75E8CE93248E82F600948C17 /* PaintingTableViewController.swift */,
-				75AB6B37248EBC5100A58113 /* PaintingViewController.swift */,
-				75E8CE91248E755500948C17 /* PictureTableViewCell.swift */,
-				75E8CE97248E86BA00948C17 /* Painting.swift */,
-				75CC75B824338AAD000C9009 /* RectangleDetectionViewController.swift */,
 				75E00DA4243220A70021F198 /* Assets.xcassets */,
 				75E00DA6243220A70021F198 /* LaunchScreen.storyboard */,
 				75E00DA9243220A70021F198 /* Info.plist */,
