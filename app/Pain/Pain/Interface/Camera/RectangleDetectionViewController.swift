@@ -25,15 +25,34 @@ extension CGPoint {
 }
 
 class RectangleDetectionViewController: CameraViewController {
+    // MARK: Static constants
+    private static let SMALLER_EDGE = CGFloat(0.08)
+    private static let BIGGER_EDGE = CGFloat(0.1)
+    
     // MARK: Properties
     private var detectionOverlay: CALayer!
+    private var coverOverlay: CoverLayer!
     
     override func setupCapture() {
         super.setupCapture()
-        print("Here")
         self.setupLayers()
         self.updateOverlayGeometry()
         startCapturing()
+    }
+    
+    func getCoverEdgeSizes(orientation: UIDeviceOrientation) -> Weights {
+        var horizontal = RectangleDetectionViewController.SMALLER_EDGE
+        var vertical = RectangleDetectionViewController.BIGGER_EDGE
+        if orientation.isLandscape {
+            swap(&vertical, &horizontal)
+        }
+        var rect = Weights(top: vertical, bottom: vertical, left: horizontal, right: horizontal)
+        if orientation.isLandscape {
+            rect.right += vertical * 1.0
+        } else {
+            rect.bottom += vertical * 1.0
+        }
+        return rect
     }
     
     func setupLayers() {
@@ -45,16 +64,45 @@ class RectangleDetectionViewController: CameraViewController {
                                          height: bufferSize.height)
         detectionOverlay.position = CGPoint(x: rootLayer.bounds.midX,
                                             y: rootLayer.bounds.midY)
-        rootLayer.addSublayer(detectionOverlay)
+        rootLayer.insertSublayer(detectionOverlay, below: takePhotoButton.layer)
+        
+        let weights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverOverlay = CoverLayer()
+        coverOverlay.fillColor = UIColor.black.cgColor.copy(alpha: 0.2)
+        coverOverlay.setShape(bounds: rootLayer.bounds, weights: weights)
+        
+        rootLayer.insertSublayer(coverOverlay, below: takePhotoButton.layer)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        let weights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverOverlay.setShape(bounds: CGRect(x: 0, y: 0, width: size.width, height: size.height),
+                              weights: weights)
     }
     
     func updateOverlayGeometry() {
         let bounds = rootLayer.bounds
         var scale: CGFloat
         
-        let xScale: CGFloat = bounds.size.width / bufferSize.height
-        let yScale: CGFloat = bounds.size.height / bufferSize.width
+        // The buffer should be 640x480 (the value `size` width x height, the bigger dimension first)
+        // If the device is in portrait, the bigger dimension will be actually the height (the height and width are swapped)
+        var switchWidthHeight = false
+        switch UIDevice.current.orientation {
+        case .portraitUpsideDown, .portrait:
+            switchWidthHeight = true
+        default:
+            ()
+        }
         
+        // The video will be centered in the view, but its dimensions don't correspond to the preview's layer dimensions
+        // So we compute the scalings
+        let xScale: CGFloat = switchWidthHeight ? bounds.size.width / bufferSize.height :
+            bounds.size.width / bufferSize.width
+        let yScale: CGFloat = switchWidthHeight ? bounds.size.height / bufferSize.width :
+            bounds.size.height / bufferSize.height
+        
+        // The video will occupy the whole view, so the biger scale is the one the video scales with
         scale = fmax(xScale, yScale)
         if scale.isInfinite {
             scale = 1.0
@@ -62,8 +110,14 @@ class RectangleDetectionViewController: CameraViewController {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         
-        // rotate the layer into screen orientation and scale and mirror
-        detectionOverlay.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: scale, y: -scale))
+        var yMultiplier = 1.0
+        switch UIDevice.current.orientation {
+        case .portrait, .landscapeRight: yMultiplier = -1.0
+        default: ()
+        }
+        let transformation = CGAffineTransform(rotationAngle: rotationAngle(orientation: UIDevice.current.orientation))
+            .scaledBy(x: scale, y: scale * CGFloat(yMultiplier))
+        detectionOverlay.setAffineTransform(transformation)
         // center the layer
         detectionOverlay.position = CGPoint(x: bounds.midX, y: bounds.midY)
         
@@ -102,6 +156,7 @@ class RectangleDetectionViewController: CameraViewController {
                     print("Not the expected type")
                     return
                 }
+                results = self.filterRectangles(rectangles: results)
                 results = self.filterRectanglesByBounds(rectangles: results)
                 results = self.filterRectanglesByInclusion(rectangles: results)
     //            print("Result count: \(results.count)")
@@ -120,11 +175,17 @@ class RectangleDetectionViewController: CameraViewController {
         }
     }
     
-    func filterRectanglesByBounds(rectangles: [VNRectangleObservation]) -> [VNRectangleObservation] {
+    private func filterRectangles(rectangles: [VNRectangleObservation]) -> [VNRectangleObservation] {
+        var rectangles = filterRectanglesByBounds(rectangles: rectangles)
+        rectangles = filterRectanglesByInclusion(rectangles: rectangles)
         return rectangles
     }
     
-    func filterRectanglesByInclusion(rectangles: [VNRectangleObservation]) -> [VNRectangleObservation] {
+    private func filterRectanglesByBounds(rectangles: [VNRectangleObservation]) -> [VNRectangleObservation] {
+        return rectangles
+    }
+    
+    private func filterRectanglesByInclusion(rectangles: [VNRectangleObservation]) -> [VNRectangleObservation] {
         return rectangles
     }
     
@@ -135,6 +196,7 @@ class RectangleDetectionViewController: CameraViewController {
         for rectangle in rectangles {
             let linePath = UIBezierPath()
             let points = [rectangle.bottomLeft, rectangle.topLeft, rectangle.topRight, rectangle.bottomRight]
+            print("\(rectangle.topLeft) \(rectangle.bottomRight)")
             linePath.move(to: points[3].scaled(to: bufferSize))
             for point in points {
                 linePath.addLine(to: point.scaled(to: bufferSize))
@@ -146,7 +208,7 @@ class RectangleDetectionViewController: CameraViewController {
             line.strokeColor = UIColor.red.cgColor
             detectionOverlay.addSublayer(line)
         }
-//        self.updateOverlayGeometry()
+        self.updateOverlayGeometry()
         CATransaction.commit()
     }
     
@@ -168,6 +230,16 @@ class RectangleDetectionViewController: CameraViewController {
             return cgImage
         } else {
             return nil
+        }
+    }
+    
+    private func rotationAngle(orientation: UIDeviceOrientation) -> CGFloat {
+        switch orientation {
+        case .portrait: return CGFloat(.pi / 2.0)
+        case .portraitUpsideDown: return CGFloat(3.0 * .pi / 2.0)
+        case .landscapeRight: return CGFloat(0)
+        case .landscapeLeft: return CGFloat(1.0 * .pi)
+        default: return -1
         }
     }
 }

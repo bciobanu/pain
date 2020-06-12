@@ -19,6 +19,8 @@
 		75E8CE92248E755500948C17 /* PictureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E8CE91248E755500948C17 /* PictureTableViewCell.swift */; };
 		75E8CE94248E82F600948C17 /* PaintingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E8CE93248E82F600948C17 /* PaintingTableViewController.swift */; };
 		75E8CE98248E86BA00948C17 /* Painting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E8CE97248E86BA00948C17 /* Painting.swift */; };
+		75F2B0042493D5FB0091FEDF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F2B0032493D5FB0091FEDF /* Extensions.swift */; };
+		75F2B0062493E4140091FEDF /* CoverLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F2B0052493E4140091FEDF /* CoverLayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		75E8CE91248E755500948C17 /* PictureTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureTableViewCell.swift; sourceTree = "<group>"; };
 		75E8CE93248E82F600948C17 /* PaintingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintingTableViewController.swift; sourceTree = "<group>"; };
 		75E8CE97248E86BA00948C17 /* Painting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Painting.swift; sourceTree = "<group>"; };
+		75F2B0032493D5FB0091FEDF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		75F2B0052493E4140091FEDF /* CoverLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverLayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,7 @@
 		7572DF6A249280E500E5A1E1 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				75F2B0022493D5DE0091FEDF /* Helpers */,
 				7572DF6C2492810500E5A1E1 /* PaintingDisplay */,
 				7572DF6B249280FD00E5A1E1 /* Camera */,
 			);
@@ -82,6 +87,7 @@
 			children = (
 				75E00D9F243220A60021F198 /* CameraViewController.swift */,
 				75CC75B824338AAD000C9009 /* RectangleDetectionViewController.swift */,
+				75F2B0052493E4140091FEDF /* CoverLayer.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -144,6 +150,14 @@
 				75E00DB4243220A70021F198 /* Info.plist */,
 			);
 			path = PainTests;
+			sourceTree = "<group>";
+		};
+		75F2B0022493D5DE0091FEDF /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				75F2B0032493D5FB0091FEDF /* Extensions.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,11 +262,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				75AB6B38248EBC5100A58113 /* PaintingViewController.swift in Sources */,
+				75F2B0042493D5FB0091FEDF /* Extensions.swift in Sources */,
 				75CC75B924338AAD000C9009 /* RectangleDetectionViewController.swift in Sources */,
 				75E00DA0243220A60021F198 /* CameraViewController.swift in Sources */,
 				75E00D9C243220A60021F198 /* AppDelegate.swift in Sources */,
 				75E8CE98248E86BA00948C17 /* Painting.swift in Sources */,
 				75E8CE92248E755500948C17 /* PictureTableViewCell.swift in Sources */,
+				75F2B0062493E4140091FEDF /* CoverLayer.swift in Sources */,
 				75E00D9E243220A60021F198 /* SceneDelegate.swift in Sources */,
 				75E8CE94248E82F600948C17 /* PaintingTableViewController.swift in Sources */,
 			);

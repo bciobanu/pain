@@ -2,7 +2,7 @@ import AVFoundation
 import CoreGraphics
 import CoreImage
 import UIKit
-import Vision
+
 
 class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     // MARK: Capture
@@ -21,6 +21,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
     // MARK: Properties
     @IBOutlet internal weak var previewView: UIView!
+    @IBOutlet weak var takePhotoButton: UIButton!
     
     override var prefersStatusBarHidden: Bool {
         true
@@ -87,7 +88,28 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         previewLayer.videoGravity = .resizeAspectFill
         rootLayer = previewView.layer
         previewLayer.frame = rootLayer.bounds
-        rootLayer.addSublayer(previewLayer)
+        print(UIDevice.current.orientation)
+        print(rootLayer.bounds)
+        if let orientation = AVCaptureVideoOrientation(deviceOrientation: UIDevice.current.orientation) {
+            previewLayer.connection?.videoOrientation = orientation
+        }
+        rootLayer.insertSublayer(previewLayer, below: takePhotoButton.layer)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        previewLayer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        let deviceOrientation = UIDevice.current.orientation
+        
+        guard let videoPreviewLayerConnection = previewLayer.connection else {
+            return
+        }
+        guard let newVideoOrientation = AVCaptureVideoOrientation(deviceOrientation: deviceOrientation),
+            deviceOrientation.isPortrait || deviceOrientation.isLandscape else {
+                return
+        }
+        
+        videoPreviewLayerConnection.videoOrientation = newVideoOrientation
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput: CMSampleBuffer,
