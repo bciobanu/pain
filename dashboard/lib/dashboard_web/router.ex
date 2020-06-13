@@ -31,6 +31,7 @@ defmodule DashboardWeb.Router do
 
     resources "/predict", PredictorController, only: [:create]
     post "/train", PredictorController, :train
+    get "/list-museum/:id", PredictorController, :list_museum
   end
 
   # Other scopes may use custom stacks.
