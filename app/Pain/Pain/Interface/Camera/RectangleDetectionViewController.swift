@@ -32,13 +32,13 @@ class RectangleDetectionViewController: CameraViewController {
     // MARK: Properties
     private var detectionOverlay: CALayer!
     private var coverOverlay: CoverLayer!
+    private var coverWeights: Weights!
     
     internal var imageLayer: CALayer!
     
     override func setupCapture() {
         super.setupCapture()
         self.setupLayers()
-        self.updateOverlayGeometry()
         startCapturing()
     }
     
@@ -63,10 +63,10 @@ class RectangleDetectionViewController: CameraViewController {
         detectionOverlay.frame = rootLayer.bounds
         rootLayer.insertSublayer(detectionOverlay, below: takePhotoButton.layer)
         
-        let weights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
         coverOverlay = CoverLayer()
         coverOverlay.fillColor = UIColor.black.cgColor.copy(alpha: 0.2)
-        coverOverlay.setShape(bounds: rootLayer.bounds, weights: weights)
+        coverOverlay.setShape(bounds: rootLayer.bounds, weights: coverWeights)
         
         rootLayer.insertSublayer(coverOverlay, below: takePhotoButton.layer)
         
@@ -77,12 +77,9 @@ class RectangleDetectionViewController: CameraViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         detectionOverlay.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        let weights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
         coverOverlay.setShape(bounds: CGRect(x: 0, y: 0, width: size.width, height: size.height),
-                              weights: weights)
-    }
-    
-    func updateOverlayGeometry() {
+                              weights: coverWeights)
     }
     
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
@@ -117,8 +114,8 @@ class RectangleDetectionViewController: CameraViewController {
                     print("Not the expected type")
                     return
                 }
-                let rectangles = self.observationsToRectangles(rectangles: results)
-                let filteredRectangles = self.filterRectangles(rectangles: rectangles)
+                let rectangles = self.observationsToRectangles(results)
+                let filteredRectangles = self.filterDetections(rectangles)
                 self.drawRectangles(rectangles: filteredRectangles)
             }
         }
@@ -126,7 +123,7 @@ class RectangleDetectionViewController: CameraViewController {
     
     // Takes the observed rectangles which have coordintates in [0, 1] and returns
     // the rectangles in `rootLayer`s bounds space (they can be out of bounds though)
-    private func observationsToRectangles(rectangles: [VNRectangleObservation]) -> [Detection] {
+    private func observationsToRectangles(_ observations: [VNRectangleObservation]) -> [Detection] {
         let bounds = rootLayer.bounds
         
         // The buffer should be 640x480 (the value `size` width x height, the bigger dimension first)
@@ -157,30 +154,79 @@ class RectangleDetectionViewController: CameraViewController {
             p1 = CGPoint(x: p1.x + xAdd, y: p1.y + yAdd)
             return p1
         }
-        return rectangles.map { (rectangle) -> Detection in
-        Detection(original: rectangle,
+        return observations.map { (observation) -> Detection in
+        Detection(original: observation,
                          relocated: Polygon(points: [
-                             transform(rectangle.topLeft),
-                             transform(rectangle.topRight),
-                             transform(rectangle.bottomRight),
-                             transform(rectangle.bottomLeft),
+                             transform(observation.topLeft),
+                             transform(observation.topRight),
+                             transform(observation.bottomRight),
+                             transform(observation.bottomLeft),
                          ])) }
     }
     
-    private func filterRectangles(rectangles: [Detection]) -> [Detection] {
-        var rectangles = filterRectanglesByBounds(rectangles: rectangles)
-        rectangles = filterRectanglesByInclusion(rectangles: rectangles)
+    private func filterDetections(_ rectangles: [Detection]) -> [Detection] {
+        var rectangles = filterDetectionsByBounds(rectangles)
+        rectangles = filterDetectionsByInclusion(rectangles)
         return rectangles
     }
     
-    private func filterRectanglesByBounds(rectangles: [Detection]) -> [Detection] {
-        return rectangles
+    private func filterDetectionsByBounds(_ rectangles: [Detection]) -> [Detection] {
+        let bounds = rootLayer.bounds
+        let top = coverWeights.top * bounds.height
+        let bottom = (1 - coverWeights.bottom) * bounds.height
+        let left = coverWeights.left * bounds.width
+        let right = (1 - coverWeights.right) * bounds.width
+        let ratio = CGFloat(1.0 / 14.0)
+        return rectangles.filter { detection in
+            let rectangle = detection.relocated
+            return rectangle.points.filter { p in
+                let closeHorizontal =
+                    (abs(p.y - top) < bounds.height * ratio || abs(p.y - bottom) < bounds.height * ratio)
+                    && left - bounds.width * ratio < p.x && p.x < right + bounds.width * ratio
+                let closeVertical =
+                    (abs(p.x - left) < bounds.width * ratio || abs(p.x - right) < bounds.width * ratio)
+                        && top - bounds.height * ratio < p.y && p.y < bottom + bounds.height * ratio
+                return closeHorizontal || closeVertical
+            }.count == rectangle.points.count
+        }
     }
     
-    private func filterRectanglesByInclusion(rectangles: [Detection]) -> [Detection] {
-        return rectangles
+    // This is not used at the moment, but I will leave it here just in case
+    private func filterDetectionsByInclusion(_ rectangles: [Detection]) -> [Detection] {
+        let crossProduct = { (o: CGPoint, a: CGPoint, b: CGPoint) -> Double in
+            Double((a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x))
+        }
+        return rectangles.filter { detection in
+            let rectangle = detection.relocated
+            var keep = true
+            for otherDetection in rectangles {
+                let otherRectangle = otherDetection.relocated
+                if rectangle == otherRectangle {
+                    continue
+                }
+                var rectangleOutside = false
+                for point1 in rectangle.points {
+                    var pointOutside = false
+                    for i in 0..<4 {
+                        if crossProduct(otherRectangle.points[i], otherRectangle.points[(i + 1) % 4], point1) < 0 {
+                            pointOutside = true
+                            break
+                        }
+                    }
+                    if pointOutside {
+                        rectangleOutside = true
+                        break
+                    }
+                }
+                if !rectangleOutside {
+                    keep = false
+                    break
+                }
+            }
+            return keep
+        }
     }
-    
+
     func drawRectangles(rectangles: [Detection]) {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
@@ -199,7 +245,6 @@ class RectangleDetectionViewController: CameraViewController {
             line.strokeColor = UIColor.red.cgColor
             detectionOverlay.addSublayer(line)
         }
-        self.updateOverlayGeometry()
         CATransaction.commit()
     }
     
@@ -240,6 +285,6 @@ struct Detection {
     var relocated: Polygon
 }
 
-struct Polygon {
+struct Polygon: Equatable {
     var points: [CGPoint]
 }
