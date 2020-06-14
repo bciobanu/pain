@@ -13,7 +13,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         qos: .userInitiated,
         attributes: [],
         autoreleaseFrequency: .workItem)
-    private var previewLayer: AVCaptureVideoPreviewLayer!
+    internal var previewLayer: AVCaptureVideoPreviewLayer!
     internal var bufferSize: CGSize = .zero
     
     // MARK: Animation
@@ -140,11 +140,11 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         case UIDeviceOrientation.portraitUpsideDown:  // Device oriented vertically, home button on the top
             exifOrientation = .left
         case UIDeviceOrientation.landscapeLeft:       // Device oriented horizontally, home button on the right
-            exifOrientation = .upMirrored
+            exifOrientation = .up
         case UIDeviceOrientation.landscapeRight:      // Device oriented horizontally, home button on the left
             exifOrientation = .down
         case UIDeviceOrientation.portrait:            // Device oriented vertically, home button on the bottom
-            exifOrientation = .up
+            exifOrientation = .right
         default:
             exifOrientation = .up
         }
