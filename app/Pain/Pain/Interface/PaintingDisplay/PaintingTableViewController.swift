@@ -19,11 +19,12 @@ class PaintingTableViewController: UITableViewController {
         super.viewDidLoad()
         self.title = "Results"
         
-        let button = UIButton(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width - 96, y: UIScreen.main.bounds.height - 96), size: CGSize(width: 96, height: 96)))
-        button.backgroundColor = UIColor.white
-        button.addTarget(self, action: #selector(openCamera), for: .touchUpInside)
+//        let button = UIButton(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width - 96, y: UIScreen.main.bounds.height - 96), size: CGSize(width: 96, height: 96)))
+//        button.backgroundColor = UIColor.white
+//        button.addTarget(self, action: #selector(openCamera), for: .touchUpInside)
+//
+//        self.view.addSubview(button)
         
-        self.view.addSubview(button)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -32,11 +33,11 @@ class PaintingTableViewController: UITableViewController {
         loadSamplePaintings()
     }
     
-    @objc
-    func openCamera(sender: UIButton!) {
-        print("Button tapped")
-        self.performSegue(withIdentifier: "ListToCamera", sender: self)
-    }
+//    @objc
+//    func openCamera(sender: UIButton!) {
+//        print("Button tapped")
+//        self.performSegue(withIdentifier: "ListToCamera", sender: self)
+//    }
     
     // MARK: - Table view data source
 
