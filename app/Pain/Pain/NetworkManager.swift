@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 class APICalls {
-    func uploadImageToServer() {
+    func uploadImageToServer(image: UIImage) -> [Painting] {
         let url = URL(string: "https://pain.azurewebsites.net/api/predict")
         var request = URLRequest(url: url!)
         request.httpMethod = "POST"
@@ -10,12 +10,10 @@ class APICalls {
         let boundary = "Boundary-\(NSUUID().uuidString)"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
-        // Get image from the camera
-        let image = UIImage(named: "Monalisa")
-        let imageData = image!.jpegData(compressionQuality: 1.0)
+        let imageData = image.jpegData(compressionQuality: 1.0)
         
         if (imageData == nil) {
-            return
+            return [Painting]()
         }
         
         let body = createBody(boundary: boundary, data: imageData!)
@@ -23,6 +21,7 @@ class APICalls {
         request.setValue(String(body.count), forHTTPHeaderField: "Content-Length")
         request.httpShouldHandleCookies = false
         
+        var paintings = [Painting]()
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error took place \(error)")
@@ -31,15 +30,15 @@ class APICalls {
      
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
-                    print("Error with the response, unexpected status code: \(response)")
+                    print("Error with the response, unexpected status code: \(String(describing: response))")
                 return
             }
             
             do {
                 let jsonResult = try JSONSerialization.jsonObject(with: data!, options: [])
-                for painting in jsonResult as! [Dictionary<String, Any>] {
-                    var testImage = self.downloadImage(imageName: painting["image_path"] as! String)
-                    print(painting)
+                for json in jsonResult as! [Dictionary<String, Any>] {
+                    paintings.append(self.getPaintingFromJson(json: json))
+                    print(json)
                 }
             } catch let error {
                 print("Failed to load: \(error.localizedDescription)")
@@ -47,13 +46,15 @@ class APICalls {
         }
         
         task.resume()
+        return paintings
     }
 
-    func getMoreFromMuseum(museumId: Int) {
+    func getMoreFromMuseum(museumId: Int) -> [Painting] {
         let url = URL(string: "https://pain.azurewebsites.net/api/list-museum/\(museumId)")
         var request = URLRequest(url: url!)
         request.httpMethod = "GET"
-       
+
+        var paintings = [Painting]()
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error took place \(error)")
@@ -61,15 +62,15 @@ class APICalls {
             }
     
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                print("Error with the response, unexpected status code: \(response)")
+                print("Error with the response, unexpected status code: \(String(describing: response))")
                 return
             }
            
             do {
                 let jsonResult = try JSONSerialization.jsonObject(with: data!, options: [])
-                for painting in jsonResult as! [Dictionary<String, Any>] {
-                    var testImage = self.downloadImage(imageName: painting["image_path"] as! String)
-                    print(painting)
+                for json in jsonResult as! [Dictionary<String, Any>] {
+                    paintings.append(self.getPaintingFromJson(json: json))
+                    print(json)
                 }
             } catch let error {
                 print("Failed to load: \(error.localizedDescription)")
@@ -77,6 +78,18 @@ class APICalls {
         }
        
         task.resume()
+        return paintings
+    }
+    
+    func getPaintingFromJson(json: Dictionary<String, Any>) -> Painting {
+        let photo: UIImage? = self.downloadImage(imageName: json["image_path"] as! String)
+        let title: String = json["name"] as! String
+        let description: String = json["description"] as! String
+        let artist: String = json["artist"] as! String
+        let medium: String = json["medium"] as! String
+        let museum: Int = json["museum"] as! Int
+        
+        return Painting(photo: photo, title: title, description: description, artist: artist, medium: medium, museum: museum)
     }
     
     func downloadImage(imageName: String) -> UIImage {
