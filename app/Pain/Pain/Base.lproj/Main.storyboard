@@ -173,7 +173,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PvF-PO-PtV">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="yE7-Hi-dgF">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="1223.5"/>
@@ -232,29 +232,34 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="953-UR-9Vy"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="3Tv-Y3-ZcI"/>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FPi-Vr-thk">
-                                <rect key="frame" x="324" y="617" width="48" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="CameraIcon"/>
-                                <connections>
-                                    <action selector="openCamera:" destination="rkU-0K-bWm" eventType="touchUpInside" id="IB8-V0-nnh"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YEd-jx-LWZ">
-                                <rect key="frame" x="263" y="617" width="48" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="TextToSpeech"/>
-                                <connections>
-                                    <action selector="textToSpeech:" destination="rkU-0K-bWm" eventType="touchUpInside" id="shO-Zh-duM"/>
-                                </connections>
-                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lMi-o2-UqP">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem title="Item" image="camera" catalog="system" id="zHk-sZ-WHW" userLabel="Photo">
+                                        <connections>
+                                            <action selector="openCamera:" destination="rkU-0K-bWm" id="2gz-ul-rby"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="25l-5y-AEz"/>
+                                    <barButtonItem title="VIsit Museum" id="K0L-RW-N0r" userLabel="More"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="bY6-XS-OJx"/>
+                                    <barButtonItem title="Item" image="message" catalog="system" id="2h6-NL-cdO" userLabel="Text to Speech">
+                                        <connections>
+                                            <action selector="textToSpeech:" destination="rkU-0K-bWm" id="7Tk-eF-Grg"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="PvF-PO-PtV" firstAttribute="leading" secondItem="EcN-8N-4bK" secondAttribute="leading" id="1rl-Jr-nX6"/>
-                            <constraint firstItem="EcN-8N-4bK" firstAttribute="bottom" secondItem="PvF-PO-PtV" secondAttribute="bottom" id="GjS-Vs-NUG"/>
+                            <constraint firstItem="lMi-o2-UqP" firstAttribute="leading" secondItem="EcN-8N-4bK" secondAttribute="leading" id="RyP-s4-uBX"/>
                             <constraint firstItem="EcN-8N-4bK" firstAttribute="trailing" secondItem="PvF-PO-PtV" secondAttribute="trailing" id="csZ-oZ-sqt"/>
+                            <constraint firstItem="EcN-8N-4bK" firstAttribute="bottom" secondItem="lMi-o2-UqP" secondAttribute="bottom" id="e1s-x1-8pb"/>
                             <constraint firstItem="PvF-PO-PtV" firstAttribute="top" secondItem="EcN-8N-4bK" secondAttribute="top" id="gVj-vi-FRc"/>
+                            <constraint firstItem="EcN-8N-4bK" firstAttribute="trailing" secondItem="lMi-o2-UqP" secondAttribute="trailing" id="mrL-kQ-HeP"/>
+                            <constraint firstItem="lMi-o2-UqP" firstAttribute="top" secondItem="PvF-PO-PtV" secondAttribute="bottom" id="zpD-lP-kGp"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="EcN-8N-4bK"/>
                     </view>
@@ -266,18 +271,17 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RvN-6j-KUk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="gAw-Fk-1Nx" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2757.5999999999999" y="86.806596701649184"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ztC-w2-lVB"/>
+        <segue reference="lTa-gg-1vk"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="CameraIcon" width="48" height="48"/>
         <image name="CameraTakePhoto" width="150" height="150"/>
         <image name="NoPhoto" width="540" height="540"/>
-        <image name="TextToSpeech" width="48" height="48"/>
+        <image name="camera" catalog="system" width="128" height="96"/>
+        <image name="message" catalog="system" width="128" height="113"/>
     </resources>
 </document>

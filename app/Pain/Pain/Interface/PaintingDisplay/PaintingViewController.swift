@@ -30,12 +30,12 @@ class PaintingViewController: UIViewController {
         }
     }
     
-    @IBAction func openCamera(_ sender: UIButton) {
+    @IBAction func openCamera(_ sender: UIBarButtonItem) {
         self.performSegue(withIdentifier: "DetailsToCamera", sender: self)
     }
     
     
-    @IBAction func textToSpeech(_ sender: UIButton) {
+    @IBAction func textToSpeech(_ sender: UIBarButtonItem) {
         let dialogue = AVSpeechUtterance(string: painting!.description)
         dialogue.rate = AVSpeechUtteranceDefaultSpeechRate
         dialogue.voice = AVSpeechSynthesisVoice(identifier: "com.apple.ttsbundle.siri_female_en-GB_compact")
