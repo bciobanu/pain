@@ -8,6 +8,13 @@ defmodule DashboardWeb.PredictorController do
     paintings =
       Dashboard.Repo.all(from p in Dashboard.Painting, where: p.image_path in ^image_list)
 
+    paintings =
+      paintings
+      |> Enum.sort_by(fn p ->
+        image_list
+        |> Enum.find_index(fn ip -> p == ip end)
+      end)
+
     render(conn, "paintings.json", paintings: paintings)
   end
 
