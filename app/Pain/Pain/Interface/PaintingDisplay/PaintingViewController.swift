@@ -5,6 +5,7 @@ class PaintingViewController: UIViewController {
     //MARK: Variables
     var painting: Painting? = nil
     private let speaker = AVSpeechSynthesizer()
+    private let api = APICalls()
     
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var paintingDescription: UITextView!
@@ -29,11 +30,9 @@ class PaintingViewController: UIViewController {
             speaker.stopSpeaking(at: .immediate)
         }
     }
-    
     @IBAction func openCamera(_ sender: UIBarButtonItem) {
         self.performSegue(withIdentifier: "DetailsToCamera", sender: self)
     }
-    
     
     @IBAction func textToSpeech(_ sender: UIBarButtonItem) {
         let dialogue = AVSpeechUtterance(string: painting!.description)
@@ -47,14 +46,34 @@ class PaintingViewController: UIViewController {
         }
     }
     
+    @IBAction func visitMuseum(_ sender: UIBarButtonItem) {
+        self.performSegue(withIdentifier: "ShowMoreFromMuseum", sender: self)
+    }
     /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
     */
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        switch (segue.identifier ?? "") {
+        case "ShowMoreFromMuseum":
+            guard let paintingTableController = segue.destination as? PaintingTableViewController else {
+                fatalError("Unexpected segue destination: \(segue.destination)")
+            }
+            let museumId = self.painting!.museum
+            api.getMoreFromMuseum(museumId: museumId) { (paintings, err) in
+                if let paintings = paintings {
+                    paintingTableController.paintings = paintings
+                    paintingTableController.tableView.reloadData()
+                }
+            }
+        case "DetailsToCamera":
+            break
+        default:
+            print(segue.identifier ?? "<nil>")
+            fatalError("Unexpected transition")
+        }
+    }
 
 }

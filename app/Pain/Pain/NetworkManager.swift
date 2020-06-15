@@ -77,7 +77,9 @@ class APICalls {
                 for json in jsonResult as! [Dictionary<String, Any>] {
                     paintings.append(self.getPaintingFromJson(json: json))
                 }
-                callback(paintings, nil)
+                DispatchQueue.main.async {
+                    callback(paintings, nil)
+                }
             } catch let error {
                 print("Failed to load: \(error.localizedDescription)")
                 callback(nil, "JSON serialization error")
