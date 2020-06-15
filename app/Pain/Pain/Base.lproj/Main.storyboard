@@ -11,7 +11,7 @@
         <!--Rectangle Detection View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="RectangleDetectionViewController" customModule="Pain" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="BYZ-38-t0r" customClass="RectangleDetectionViewController" customModule="Pain" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -83,7 +83,7 @@
         <!--Navigation Controller-->
         <scene sceneID="hYe-Z9-W1U">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="eTQ-ka-O91" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" navigationBarHidden="YES" id="eTQ-ka-O91" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kuw-fh-Zlr">
                         <autoresizingMask key="autoresizingMask"/>
@@ -100,7 +100,7 @@
         <!--Canditate Display-->
         <scene sceneID="0gX-nU-jko">
             <objects>
-                <tableViewController title="Canditate Display" id="5Au-cH-DqW" customClass="PaintingTableViewController" customModule="Pain" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Canditate Display" modalPresentationStyle="fullScreen" id="5Au-cH-DqW" customClass="PaintingTableViewController" customModule="Pain" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="120" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="jDH-HW-Iyd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -148,6 +148,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="sl4-En-fgf"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="ListToCamera" id="lTa-gg-1vk"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1ef-oM-mgX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -156,7 +159,7 @@
         <!--Painting View Controller-->
         <scene sceneID="iuL-sL-eAN">
             <objects>
-                <viewController title="Painting View Controller" id="rkU-0K-bWm" customClass="PaintingViewController" customModule="Pain" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Painting View Controller" modalPresentationStyle="fullScreen" id="rkU-0K-bWm" customClass="PaintingViewController" customModule="Pain" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UiC-5l-0De">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -209,6 +212,25 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="953-UR-9Vy"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="3Tv-Y3-ZcI"/>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FPi-Vr-thk">
+                                <rect key="frame" x="324" y="617" width="48" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="CameraIcon"/>
+                                <connections>
+                                    <action selector="openCamera:" destination="rkU-0K-bWm" eventType="touchUpInside" id="IB8-V0-nnh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K41-69-M3n">
+                                <rect key="frame" x="150" y="300" width="100" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="NoPhoto">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleShadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="testServerUpload:" destination="rkU-0K-bWm" eventType="touchUpInside" id="gdp-qm-zGF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -223,6 +245,7 @@
                     <connections>
                         <outlet property="paintingDescription" destination="TNo-ff-8qa" id="vnL-OB-z3L"/>
                         <outlet property="photo" destination="y1s-Qq-pP7" id="3kg-x9-SKi"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="DetailsToCamera" id="ztC-w2-lVB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RvN-6j-KUk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -230,7 +253,11 @@
             <point key="canvasLocation" x="2757.5999999999999" y="86.806596701649184"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="ztC-w2-lVB"/>
+    </inferredMetricsTieBreakers>
     <resources>
+        <image name="CameraIcon" width="48" height="48"/>
         <image name="CameraTakePhoto" width="150" height="150"/>
         <image name="NoPhoto" width="540" height="540"/>
     </resources>

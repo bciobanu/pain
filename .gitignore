@@ -2,3 +2,5 @@ dashboard/config/prod.secret.exs
 .log/
 *.pth
 runs
+.DS_Store
+app/Pain/Pain.xcodeproj/project.pbxproj

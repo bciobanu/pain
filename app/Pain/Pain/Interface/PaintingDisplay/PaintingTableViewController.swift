@@ -18,7 +18,13 @@ class PaintingTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Results"
-
+        
+//        let button = UIButton(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width - 96, y: UIScreen.main.bounds.height - 96), size: CGSize(width: 96, height: 96)))
+//        button.backgroundColor = UIColor.white
+//        button.addTarget(self, action: #selector(openCamera), for: .touchUpInside)
+//
+//        self.view.addSubview(button)
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -26,7 +32,13 @@ class PaintingTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         loadSamplePaintings()
     }
-
+    
+//    @objc
+//    func openCamera(sender: UIButton!) {
+//        print("Button tapped")
+//        self.performSegue(withIdentifier: "ListToCamera", sender: self)
+//    }
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -45,7 +57,7 @@ class PaintingTableViewController: UITableViewController {
         let painting = paintings[indexPath.row]
         cell.photo.image = painting.photo
         cell.title.text = painting.title
-        cell.smallDescription.text = painting.description
+        cell.smallDescription.text = painting.artist
 
         return cell
     }
@@ -111,9 +123,9 @@ class PaintingTableViewController: UITableViewController {
     }
 
     private func loadSamplePaintings() {
-        let painting1 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc")
-        let painting2 = Painting(photo: nil, title: "Monalisa", description: "Etc etc etc")
-        let painting3 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc ")
+        let painting1 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc", artist: "Leonardo da Vinci", medium: "Oil", museum: 1)
+        let painting2 = Painting(photo: nil, title: "Monalisa", description: "Etc etc etc", artist: "Leonardo da Vinci", medium: "Oil", museum: 1)
+        let painting3 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc ", artist: "Leonardo da Vinci", medium: "Oil", museum: 1)
         paintings = [painting1, painting2, painting3]
     }
 }
