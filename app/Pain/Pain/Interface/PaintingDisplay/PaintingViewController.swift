@@ -29,10 +29,10 @@ class PaintingViewController: UIViewController {
     
 
     @IBAction func testServerUpload(_ sender: UIButton) {
-        print("Test pressed")
-        let network = APICalls()
-        network.uploadImageToServer(image: UIImage(named: "Monalisa")!)
-        network.getMoreFromMuseum(museumId: 1)
+//        print("Test pressed")
+//        let network = APICalls()
+//        network.uploadImageToServer(image: UIImage(named: "Monalisa")!)
+//        network.getMoreFromMuseum(museumId: 1)
     }
     
     /*
