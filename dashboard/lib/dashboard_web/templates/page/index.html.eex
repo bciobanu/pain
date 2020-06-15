@@ -22,6 +22,10 @@
               <strong>Medium:</strong> <%= painting.medium %><br>
               <strong>Year:</strong> <%= painting.year.year %><br>
             </div>
+            <div class="card-title">
+              <%= button "Delete entry", to: Routes.page_path(@conn, :delete, painting.id), method: :delete, class: "btn btn-danger" %>
+            </div>
+
             <%= painting.description %>
           </div>
         </div>

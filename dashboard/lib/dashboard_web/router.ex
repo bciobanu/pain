@@ -19,6 +19,7 @@ defmodule DashboardWeb.Router do
 
     get "/", PageController, :index
     resources "/painting", PageController, only: [:new, :create]
+    delete "/remove/:id", PageController, :delete
 
     resources "/session", SessionController, only: [:new, :create]
     delete "/signout", SessionController, :delete
@@ -31,6 +32,7 @@ defmodule DashboardWeb.Router do
 
     resources "/predict", PredictorController, only: [:create]
     post "/train", PredictorController, :train
+    post "/reload", PredictorController, :reload
     get "/list-museum/:id", PredictorController, :list_museum
   end
 

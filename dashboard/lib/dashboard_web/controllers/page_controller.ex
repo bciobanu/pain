@@ -72,4 +72,23 @@ defmodule DashboardWeb.PageController do
         |> render("new.html", changeset: changeset)
     end
   end
+
+  def delete(conn, %{"id" => id}) do
+    painting = Dashboard.Repo.get!(Dashboard.Painting, id)
+
+    case painting |> Dashboard.Repo.delete() do
+      {:ok, _painting} ->
+        painting.image_path
+        |> absolute_image_path
+        |> File.rm!()
+
+        conn
+        |> put_flash(:info, "Successfully deleted!")
+        |> redirect(to: Routes.page_path(conn, :index))
+
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:error, "There was an error deleting the painting.")
+    end
+  end
 end

@@ -20,4 +20,9 @@ defmodule DashboardWeb.PredictorController do
     paintings = Dashboard.Repo.all(from p in Dashboard.Painting, where: p.user_id == ^id)
     render(conn, "paintings.json", paintings: paintings)
   end
+
+  def reload(conn, _payload) do
+    Task.start(fn -> Dashboard.Predictor.Workers.reload() end)
+    send_resp(conn, :ok, "")
+  end
 end
