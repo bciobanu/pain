@@ -113,30 +113,38 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="NoPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="W0d-sV-T3k">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="W0d-sV-T3k">
                                             <rect key="frame" x="16" y="11" width="94" height="98"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Titlu" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9de-97-F1i">
-                                            <rect key="frame" x="118" y="11" width="241" height="26"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Abc Abc Abc" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9de-97-F1i">
+                                            <rect key="frame" x="118" y="11" width="247" height="25.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Pj-Hg-SxH">
-                                            <rect key="frame" x="118" y="36" width="241" height="73"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                            <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                        </textView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pablo Diego José Francisco de Paula Juan Nepomuceno María de los Remedios Cipriano de la Santísima Trinidad Ruiz y Picasso" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="26L-UZ-DAp" userLabel="Artist">
+                                            <rect key="frame" x="118" y="38.5" width="247" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="26L-UZ-DAp" firstAttribute="top" secondItem="9de-97-F1i" secondAttribute="bottom" constant="2" id="0uu-iz-WZG"/>
+                                        <constraint firstAttribute="trailing" secondItem="9de-97-F1i" secondAttribute="trailing" constant="10" id="6kt-pI-TLi"/>
+                                        <constraint firstItem="26L-UZ-DAp" firstAttribute="leading" secondItem="W0d-sV-T3k" secondAttribute="trailing" constant="8" id="6t0-z4-Kgs"/>
+                                        <constraint firstAttribute="bottom" secondItem="W0d-sV-T3k" secondAttribute="bottom" constant="11" id="GQc-d3-xLq"/>
+                                        <constraint firstItem="9de-97-F1i" firstAttribute="leading" secondItem="W0d-sV-T3k" secondAttribute="trailing" constant="8" id="Pe5-f7-7kD"/>
+                                        <constraint firstItem="W0d-sV-T3k" firstAttribute="width" secondItem="eAy-x3-WFz" secondAttribute="height" multiplier="47:60" id="QZx-bm-gPJ"/>
+                                        <constraint firstAttribute="trailing" secondItem="26L-UZ-DAp" secondAttribute="trailing" constant="10" id="RVb-KG-C0I"/>
+                                        <constraint firstItem="W0d-sV-T3k" firstAttribute="top" secondItem="eAy-x3-WFz" secondAttribute="top" constant="11" id="gnp-A0-nmX"/>
+                                        <constraint firstItem="9de-97-F1i" firstAttribute="top" secondItem="eAy-x3-WFz" secondAttribute="top" constant="11" id="iel-3M-7cw"/>
+                                        <constraint firstItem="W0d-sV-T3k" firstAttribute="leading" secondItem="eAy-x3-WFz" secondAttribute="leading" constant="16" id="nyZ-GR-PXX"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="artist" destination="26L-UZ-DAp" id="nA5-sG-986"/>
                                     <outlet property="photo" destination="W0d-sV-T3k" id="flF-28-SoL"/>
-                                    <outlet property="smallDescription" destination="3Pj-Hg-SxH" id="qPg-iH-StE"/>
                                     <outlet property="title" destination="9de-97-F1i" id="ohw-67-aow"/>
                                     <segue destination="rkU-0K-bWm" kind="show" identifier="ShowPainting" id="zyq-mc-clE"/>
                                 </connections>
@@ -168,38 +176,50 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="yE7-Hi-dgF">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1068"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1223.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eeY-cz-aDi" userLabel="PhotoContainer">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="300"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="252" verticalHuggingPriority="252" image="NoPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="y1s-Qq-pP7" userLabel="Photo">
-                                                        <rect key="frame" x="10" y="0.0" width="355" height="300"/>
+                                                        <rect key="frame" x="15" y="10" width="345" height="280"/>
+                                                        <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="10"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </imageView>
                                                 </subviews>
-                                                <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="300" id="3cv-YH-IH3"/>
-                                                    <constraint firstAttribute="bottom" secondItem="y1s-Qq-pP7" secondAttribute="bottom" id="b83-b0-3Up"/>
-                                                    <constraint firstAttribute="trailing" secondItem="y1s-Qq-pP7" secondAttribute="trailing" constant="10" id="kBR-Rq-ilU"/>
-                                                    <constraint firstItem="y1s-Qq-pP7" firstAttribute="leading" secondItem="eeY-cz-aDi" secondAttribute="leading" constant="10" id="l0P-0J-wHy"/>
-                                                    <constraint firstItem="y1s-Qq-pP7" firstAttribute="top" secondItem="eeY-cz-aDi" secondAttribute="top" id="vuY-gg-WQi"/>
+                                                    <constraint firstAttribute="bottom" secondItem="y1s-Qq-pP7" secondAttribute="bottom" constant="10" id="b83-b0-3Up"/>
+                                                    <constraint firstAttribute="trailing" secondItem="y1s-Qq-pP7" secondAttribute="trailing" constant="15" id="kBR-Rq-ilU"/>
+                                                    <constraint firstItem="y1s-Qq-pP7" firstAttribute="leading" secondItem="eeY-cz-aDi" secondAttribute="leading" constant="15" id="l0P-0J-wHy"/>
+                                                    <constraint firstItem="y1s-Qq-pP7" firstAttribute="top" secondItem="eeY-cz-aDi" secondAttribute="top" constant="10" id="vuY-gg-WQi"/>
                                                 </constraints>
                                             </view>
-                                            <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="253" verticalHuggingPriority="253" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TNo-ff-8qa" userLabel="Painting Description">
-                                                <rect key="frame" x="0.0" y="300" width="375" height="768"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wrd-3h-OYq" userLabel="Painting Description Container">
+                                                <rect key="frame" x="0.0" y="300" width="375" height="923.5"/>
+                                                <subviews>
+                                                    <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="253" verticalHuggingPriority="253" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TNo-ff-8qa" userLabel="Painting Description">
+                                                        <rect key="frame" x="15" y="15" width="340" height="888.5"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                        <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    </textView>
+                                                </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                            </textView>
+                                                <constraints>
+                                                    <constraint firstItem="TNo-ff-8qa" firstAttribute="leading" secondItem="Wrd-3h-OYq" secondAttribute="leading" constant="15" id="1y8-TF-yVi"/>
+                                                    <constraint firstAttribute="trailing" secondItem="TNo-ff-8qa" secondAttribute="trailing" constant="20" id="PKb-E3-U0O"/>
+                                                    <constraint firstItem="TNo-ff-8qa" firstAttribute="top" secondItem="Wrd-3h-OYq" secondAttribute="top" constant="15" id="bXZ-NS-zZB"/>
+                                                    <constraint firstAttribute="bottom" secondItem="TNo-ff-8qa" secondAttribute="bottom" constant="20" id="s1z-DP-1PG"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstItem="TNo-ff-8qa" firstAttribute="top" secondItem="eeY-cz-aDi" secondAttribute="bottom" id="MYv-RY-xpf"/>
-                                            <constraint firstItem="TNo-ff-8qa" firstAttribute="width" secondItem="yE7-Hi-dgF" secondAttribute="width" id="TrJ-iF-Yra"/>
-                                            <constraint firstItem="eeY-cz-aDi" firstAttribute="top" secondItem="yE7-Hi-dgF" secondAttribute="top" id="hVd-nx-NNZ"/>
-                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -246,6 +266,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RvN-6j-KUk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="gAw-Fk-1Nx" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2757.5999999999999" y="86.806596701649184"/>
         </scene>

@@ -40,6 +40,7 @@ class RectangleDetectionViewController: CameraViewController {
     internal var imagePixelBuffer: CVPixelBuffer!
     
     override func setupCapture() {
+        takePhotoButton.isEnabled = false
         super.setupCapture()
         self.setupLayers()
         startCapturing()
@@ -188,7 +189,7 @@ class RectangleDetectionViewController: CameraViewController {
         let bottom = (1 - coverWeights.bottom) * bounds.height
         let left = coverWeights.left * bounds.width
         let right = (1 - coverWeights.right) * bounds.width
-        let ratio = CGFloat(1.0 / 14.0)
+        let ratio = CGFloat(1.0 / 10.0)
         return rectangles.filter { detection in
             let rectangle = detection.relocated
             return rectangle.points.filter { p in

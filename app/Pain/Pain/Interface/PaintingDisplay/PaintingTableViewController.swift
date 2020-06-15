@@ -57,7 +57,7 @@ class PaintingTableViewController: UITableViewController {
         let painting = paintings[indexPath.row]
         cell.photo.image = painting.photo
         cell.title.text = painting.title
-        cell.smallDescription.text = painting.artist
+        cell.artist.text = painting.artist
 
         return cell
     }

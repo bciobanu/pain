@@ -4,7 +4,7 @@ class PictureTableViewCell: UITableViewCell {
 
     //MARK: Properties
     @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var smallDescription: UITextView!
+    @IBOutlet weak var artist: UILabel!
     @IBOutlet weak var photo: UIImageView!
     
     override func awakeFromNib() {
