@@ -262,6 +262,7 @@ class RectangleDetectionViewController: CameraViewController {
     
     func cutAndSkew(pixelBuffer: CVPixelBuffer, rect: VNRectangleObservation) -> CGImage? {
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+            .oriented(exifOrientationFromDeviceOrientation())
         return self.cutAndSkew(ciImage: ciImage, rect: rect)
     }
     

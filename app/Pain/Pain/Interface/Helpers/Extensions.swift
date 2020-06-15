@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import CoreGraphics
 
 extension AVCaptureVideoOrientation {
     init?(deviceOrientation: UIDeviceOrientation) {
