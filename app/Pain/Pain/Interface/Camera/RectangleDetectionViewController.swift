@@ -30,11 +30,14 @@ class RectangleDetectionViewController: CameraViewController {
     private static let BIGGER_EDGE = CGFloat(0.1)
     
     // MARK: Properties
+    private let api = APICalls()
+
     private var detectionOverlay: CALayer!
     private var coverOverlay: CoverLayer!
     private var coverWeights: Weights!
     
-    internal var imageLayer: CALayer!
+    internal var imageDetection: Detection?
+    internal var imagePixelBuffer: CVPixelBuffer!
     
     override func setupCapture() {
         super.setupCapture()
@@ -69,9 +72,6 @@ class RectangleDetectionViewController: CameraViewController {
         coverOverlay.setShape(bounds: rootLayer.bounds, weights: coverWeights)
         
         rootLayer.insertSublayer(coverOverlay, below: takePhotoButton.layer)
-        
-        imageLayer = CALayer()
-        rootLayer.addSublayer(imageLayer)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -108,7 +108,6 @@ class RectangleDetectionViewController: CameraViewController {
     // found where it is the case
     func handleRectangles(_ pixelBuffer: CVPixelBuffer) -> ((VNRequest, Error?) -> Void) {
         return { (request: VNRequest, error: Error?) in
-            
             DispatchQueue.main.async {
                 guard let results = request.results as? [VNRectangleObservation] else {
                     print("Not the expected type")
@@ -116,6 +115,19 @@ class RectangleDetectionViewController: CameraViewController {
                 }
                 let rectangles = self.observationsToRectangles(results)
                 let filteredRectangles = self.filterDetections(rectangles)
+                self.imagePixelBuffer = pixelBuffer
+                if filteredRectangles.count == 1 {
+                    let previous = self.imageDetection
+                    self.imageDetection = filteredRectangles[0]
+                    if previous == nil {
+                        self.takePhotoButton.isEnabled = true
+                    }
+                } else {
+                    if self.imageDetection != nil {
+                        self.takePhotoButton.isEnabled = false
+                    }
+                    self.imageDetection = nil
+                }
                 self.drawRectangles(rectangles: filteredRectangles)
             }
         }
@@ -276,6 +288,31 @@ class RectangleDetectionViewController: CameraViewController {
         case .landscapeRight: return CGFloat(0)
         case .landscapeLeft: return CGFloat(1.0 * .pi)
         default: return -1
+        }
+    }
+    
+    //MARK: Segue
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        switch (segue.identifier ?? "") {
+        case "ShowResults":
+            guard let paintingTableController = segue.destination as? PaintingTableViewController else {
+                fatalError("Unexpected segue destination: \(segue.destination)")
+            }
+            guard let cgImage = cutAndSkew(pixelBuffer: self.imagePixelBuffer, rect: self.imageDetection!.original) else {
+                fatalError("Could not create cgImage")
+            }
+            let uiImage = UIImage(cgImage: cgImage)
+            api.uploadImageToServer(image: uiImage) { (paintings, err) in
+                if let paintings = paintings {
+                    paintingTableController.paintings = paintings
+                    paintingTableController.tableView.reloadData()
+                }
+            }
+        default:
+            print(segue.identifier ?? "<nil>")
+            fatalError("Unexpected transition")
         }
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 class APICalls {
-    func uploadImageToServer(image: UIImage) -> [Painting] {
+    func uploadImageToServer(image: UIImage, callback: @escaping ([Painting]?, String?) -> Void) {
         let url = URL(string: "https://pain.azurewebsites.net/api/predict")
         var request = URLRequest(url: url!)
         request.httpMethod = "POST"
@@ -13,7 +13,7 @@ class APICalls {
         let imageData = image.jpegData(compressionQuality: 1.0)
         
         if (imageData == nil) {
-            return [Painting]()
+            callback(nil, "Invalid image")
         }
         
         let body = createBody(boundary: boundary, data: imageData!)
@@ -21,64 +21,70 @@ class APICalls {
         request.setValue(String(body.count), forHTTPHeaderField: "Content-Length")
         request.httpShouldHandleCookies = false
         
-        var paintings = [Painting]()
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error took place \(error)")
+                callback(nil, "Http error")
                 return
             }
      
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
-                    print("Error with the response, unexpected status code: \(String(describing: response))")
+                print("Error with the response, unexpected status code: \(String(describing: response))")
+                callback(nil, "Http response error")
                 return
             }
-            
+
             do {
+                var paintings = [Painting]()
                 let jsonResult = try JSONSerialization.jsonObject(with: data!, options: [])
                 for json in jsonResult as! [Dictionary<String, Any>] {
                     paintings.append(self.getPaintingFromJson(json: json))
-                    print(json)
+                }
+                DispatchQueue.main.async {
+                    callback(paintings, nil)
                 }
             } catch let error {
                 print("Failed to load: \(error.localizedDescription)")
+                callback(nil, "JSON serialization error")
             }
         }
         
         task.resume()
-        return paintings
     }
 
-    func getMoreFromMuseum(museumId: Int) -> [Painting] {
+    func getMoreFromMuseum(museumId: Int, callback: @escaping ([Painting]?, String?) -> Void) {
         let url = URL(string: "https://pain.azurewebsites.net/api/list-museum/\(museumId)")
         var request = URLRequest(url: url!)
         request.httpMethod = "GET"
 
-        var paintings = [Painting]()
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error took place \(error)")
+                callback(nil, "Http error")
                 return
             }
     
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
                 print("Error with the response, unexpected status code: \(String(describing: response))")
+                callback(nil, "Http response error")
                 return
             }
-           
+
             do {
+                var paintings = [Painting]()
                 let jsonResult = try JSONSerialization.jsonObject(with: data!, options: [])
                 for json in jsonResult as! [Dictionary<String, Any>] {
                     paintings.append(self.getPaintingFromJson(json: json))
-                    print(json)
                 }
+                callback(paintings, nil)
             } catch let error {
                 print("Failed to load: \(error.localizedDescription)")
+                callback(nil, "JSON serialization error")
             }
         }
        
         task.resume()
-        return paintings
     }
     
     func getPaintingFromJson(json: Dictionary<String, Any>) -> Painting {

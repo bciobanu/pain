@@ -28,7 +28,7 @@
                                         <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" title="Button" image="CameraTakePhoto"/>
                                         <connections>
-                                            <segue destination="5Au-cH-DqW" kind="show" id="lam-IP-L2J"/>
+                                            <segue destination="5Au-cH-DqW" kind="show" identifier="ShowResults" id="lam-IP-L2J"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -254,6 +254,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="lam-IP-L2J"/>
         <segue reference="ztC-w2-lVB"/>
     </inferredMetricsTieBreakers>
     <resources>
