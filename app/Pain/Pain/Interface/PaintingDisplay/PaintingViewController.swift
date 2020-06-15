@@ -3,7 +3,7 @@ import UIKit
 class PaintingViewController: UIViewController {
     //MARK: Variables
     var painting: Painting? = nil
-
+    
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var paintingDescription: UITextView!
     
@@ -22,8 +22,19 @@ class PaintingViewController: UIViewController {
         print(self.view.subviews[0])
     }
     
+    @IBAction func openCamera(_ sender: UIButton) {
+        print("Camera stuff I guess")
+        self.performSegue(withIdentifier: "DetailsToCamera", sender: self)
+    }
     
 
+    @IBAction func testServerUpload(_ sender: UIButton) {
+        print("Test pressed")
+        let network = APICalls()
+        network.uploadImageToServer()
+        network.getMoreFromMuseum(museumId: 1)
+    }
+    
     /*
     // MARK: - Navigation
 
