@@ -10,9 +10,9 @@ defmodule DashboardWeb.PredictorController do
 
     paintings =
       paintings
-      |> Enum.sort_by(fn p ->
+      |> Enum.sort_by(fn db_p ->
         image_list
-        |> Enum.find_index(fn ip -> p == ip end)
+        |> Enum.find_index(fn predicted -> db_p.image_path == predicted end)
       end)
 
     render(conn, "paintings.json", paintings: paintings)
