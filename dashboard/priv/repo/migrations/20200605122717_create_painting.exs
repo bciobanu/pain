@@ -2,6 +2,8 @@ defmodule Dashboard.Repo.Migrations.CreateName do
   use Ecto.Migration
 
   def change do
+    drop_if_exists table(:painting)
+    
     create table(:painting) do
       add :name, :string
       add :artist, :string

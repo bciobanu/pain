@@ -17,24 +17,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IMH-Fg-ZA6" userLabel="Preview View">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="567"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="IMH-Fg-ZA6" secondAttribute="height" multiplier="80:121" id="2f0-bP-E88"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ln8-T7-PUG">
-                                <rect key="frame" x="0.0" y="567" width="375" height="100"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Dq-MX-n7U">
-                                        <rect key="frame" x="134" y="-4.5" width="107" height="109.5"/>
+                                        <rect key="frame" x="147.5" y="577" width="80" height="80"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="2Dq-MX-n7U" secondAttribute="height" multiplier="45:46" id="0CY-uV-tep"/>
+                                            <constraint firstAttribute="width" constant="80" id="AQk-iJ-RCp"/>
+                                            <constraint firstAttribute="width" secondItem="2Dq-MX-n7U" secondAttribute="height" multiplier="1:1" id="ll6-pr-xpV"/>
                                         </constraints>
                                         <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="Button" image="CameraTakePhoto">
-                                            <color key="titleShadowColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
-                                        </state>
+                                        <state key="normal" title="Button" image="CameraTakePhoto"/>
                                         <connections>
                                             <segue destination="5Au-cH-DqW" kind="show" id="lam-IP-L2J"/>
                                         </connections>
@@ -42,32 +34,51 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="2Dq-MX-n7U" firstAttribute="centerX" secondItem="ln8-T7-PUG" secondAttribute="centerX" id="H0S-1C-i6D"/>
-                                    <constraint firstItem="2Dq-MX-n7U" firstAttribute="height" secondItem="ln8-T7-PUG" secondAttribute="height" multiplier="1.09524" id="JuM-cV-uLH"/>
-                                    <constraint firstItem="2Dq-MX-n7U" firstAttribute="centerY" secondItem="ln8-T7-PUG" secondAttribute="centerY" id="LSz-eY-Nnr"/>
+                                    <constraint firstItem="2Dq-MX-n7U" firstAttribute="centerY" secondItem="IMH-Fg-ZA6" secondAttribute="centerY" id="cb7-82-rCM"/>
+                                    <constraint firstAttribute="bottom" secondItem="2Dq-MX-n7U" secondAttribute="bottom" constant="10" id="sG1-fI-uSM"/>
+                                    <constraint firstItem="2Dq-MX-n7U" firstAttribute="centerX" secondItem="IMH-Fg-ZA6" secondAttribute="centerX" id="u71-wq-nbM"/>
+                                    <constraint firstAttribute="trailing" secondItem="2Dq-MX-n7U" secondAttribute="trailing" constant="15" id="ynT-ZG-Fv7"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="cb7-82-rCM"/>
+                                        <exclude reference="sG1-fI-uSM"/>
+                                        <exclude reference="u71-wq-nbM"/>
+                                        <exclude reference="ynT-ZG-Fv7"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=compact-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="cb7-82-rCM"/>
+                                        <include reference="ynT-ZG-Fv7"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="sG1-fI-uSM"/>
+                                        <include reference="u71-wq-nbM"/>
+                                    </mask>
+                                </variation>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="IMH-Fg-ZA6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="62E-uY-2Ta"/>
-                            <constraint firstItem="ln8-T7-PUG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="DRb-gN-6l8"/>
-                            <constraint firstItem="ln8-T7-PUG" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Q7c-gC-1Qf"/>
-                            <constraint firstItem="ln8-T7-PUG" firstAttribute="top" secondItem="IMH-Fg-ZA6" secondAttribute="bottom" id="aDz-iF-fAP"/>
                             <constraint firstItem="IMH-Fg-ZA6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="cwt-ZN-c98"/>
-                            <constraint firstItem="ln8-T7-PUG" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="rMA-vY-dmZ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="IMH-Fg-ZA6" secondAttribute="bottom" id="hYQ-iI-fk9"/>
                             <constraint firstItem="IMH-Fg-ZA6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="wie-Ep-1cX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="HIi-Y4-UwS"/>
                     <connections>
-                        <outlet property="previewView" destination="IMH-Fg-ZA6" id="sg0-mJ-0d9"/>
+                        <outlet property="previewView" destination="IMH-Fg-ZA6" id="YDI-eM-DnY"/>
+                        <outlet property="takePhotoButton" destination="2Dq-MX-n7U" id="Cl6-Pa-Vp0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1072.5" y="86.619718309859152"/>
+            <point key="canvasLocation" x="1071.2" y="85.907046476761622"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hYe-Z9-W1U">

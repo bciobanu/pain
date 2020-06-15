@@ -25,50 +25,61 @@ extension CGPoint {
 }
 
 class RectangleDetectionViewController: CameraViewController {
+    // MARK: Static constants
+    private static let SMALLER_EDGE = CGFloat(0.08)
+    private static let BIGGER_EDGE = CGFloat(0.1)
+    
     // MARK: Properties
     private var detectionOverlay: CALayer!
+    private var coverOverlay: CoverLayer!
+    private var coverWeights: Weights!
+    
+    internal var imageLayer: CALayer!
     
     override func setupCapture() {
         super.setupCapture()
-        print("Here")
         self.setupLayers()
-        self.updateOverlayGeometry()
         startCapturing()
+    }
+    
+    func getCoverEdgeSizes(orientation: UIDeviceOrientation) -> Weights {
+        var horizontal = RectangleDetectionViewController.SMALLER_EDGE
+        var vertical = RectangleDetectionViewController.BIGGER_EDGE
+        if orientation.isLandscape {
+            swap(&vertical, &horizontal)
+        }
+        var rect = Weights(top: vertical, bottom: vertical, left: horizontal, right: horizontal)
+        if orientation.isLandscape {
+            rect.right += vertical * 1.0
+        } else {
+            rect.bottom += vertical * 1.0
+        }
+        return rect
     }
     
     func setupLayers() {
         detectionOverlay = CALayer()
         detectionOverlay.name = "DetectionOverlay"
-        detectionOverlay.bounds = CGRect(x: 0.0,
-                                         y: 0.0,
-                                         width: bufferSize.width,
-                                         height: bufferSize.height)
-        detectionOverlay.position = CGPoint(x: rootLayer.bounds.midX,
-                                            y: rootLayer.bounds.midY)
-        rootLayer.addSublayer(detectionOverlay)
+        detectionOverlay.frame = rootLayer.bounds
+        rootLayer.insertSublayer(detectionOverlay, below: takePhotoButton.layer)
+        
+        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverOverlay = CoverLayer()
+        coverOverlay.fillColor = UIColor.black.cgColor.copy(alpha: 0.2)
+        coverOverlay.setShape(bounds: rootLayer.bounds, weights: coverWeights)
+        
+        rootLayer.insertSublayer(coverOverlay, below: takePhotoButton.layer)
+        
+        imageLayer = CALayer()
+        rootLayer.addSublayer(imageLayer)
     }
     
-    func updateOverlayGeometry() {
-        let bounds = rootLayer.bounds
-        var scale: CGFloat
-        
-        let xScale: CGFloat = bounds.size.width / bufferSize.height
-        let yScale: CGFloat = bounds.size.height / bufferSize.width
-        
-        scale = fmax(xScale, yScale)
-        if scale.isInfinite {
-            scale = 1.0
-        }
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        
-        // rotate the layer into screen orientation and scale and mirror
-        detectionOverlay.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: scale, y: -scale))
-        // center the layer
-        detectionOverlay.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        
-        CATransaction.commit()
-        
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        detectionOverlay.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverOverlay.setShape(bounds: CGRect(x: 0, y: 0, width: size.width, height: size.height),
+                              weights: coverWeights)
     }
     
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
@@ -97,47 +108,135 @@ class RectangleDetectionViewController: CameraViewController {
     // found where it is the case
     func handleRectangles(_ pixelBuffer: CVPixelBuffer) -> ((VNRequest, Error?) -> Void) {
         return { (request: VNRequest, error: Error?) in
+            
             DispatchQueue.main.async {
-                guard var results = request.results as? [VNRectangleObservation] else {
+                guard let results = request.results as? [VNRectangleObservation] else {
                     print("Not the expected type")
                     return
                 }
-                results = self.filterRectanglesByBounds(rectangles: results)
-                results = self.filterRectanglesByInclusion(rectangles: results)
-    //            print("Result count: \(results.count)")
-                self.drawRectangles(rectangles: results)
-                if results.count != 1 {
-    //                print("No extracted image, number of rectangles detected: \(results.count)")
-                } else {
-                
-                    guard let cutImage = self.cutAndSkew(pixelBuffer: pixelBuffer, rect: results[0]) else {
-                        print("Could not cut and skew the image!")
-                        return
-                    }
-//                    self.correctedImage.image = UIImage(cgImage: cutImage)
-                }
+                let rectangles = self.observationsToRectangles(results)
+                let filteredRectangles = self.filterDetections(rectangles)
+                self.drawRectangles(rectangles: filteredRectangles)
             }
         }
     }
     
-    func filterRectanglesByBounds(rectangles: [VNRectangleObservation]) -> [VNRectangleObservation] {
+    // Takes the observed rectangles which have coordintates in [0, 1] and returns
+    // the rectangles in `rootLayer`s bounds space (they can be out of bounds though)
+    private func observationsToRectangles(_ observations: [VNRectangleObservation]) -> [Detection] {
+        let bounds = rootLayer.bounds
+        
+        // The buffer should be 640x480 (the value `size` width x height, the bigger dimension first)
+        // If the device is in portrait, the bigger dimension will be actually the height (the height and width are swapped)
+        var trueBufferSize = bufferSize;
+        if UIDevice.current.orientation.isPortrait {
+            trueBufferSize = CGSize(width: bufferSize.height, height: bufferSize.width)
+        }
+        
+        // The video will be centered in the view, but its dimensions don't correspond to the preview's layer dimensions
+        // So we compute the scalings
+        let xScale: CGFloat = bounds.size.width / trueBufferSize.width
+        let yScale: CGFloat = bounds.size.height / trueBufferSize.height
+        
+        // The video will take the whole view, so the biger scale is the one the video scales with
+        var scale = fmax(xScale, yScale)
+        if scale.isInfinite {
+            scale = 1.0
+        }
+        
+        // One of the preview's layer dimensions will be equal to the view coresponding dimension,
+        // the other will be bigger and centered, so one of the following values will be 0
+        let xAdd = -(trueBufferSize.width * scale - bounds.size.width) / 2.0
+        let yAdd = -(trueBufferSize.height * scale - bounds.size.height) / 2.0
+        let transform = { (p: CGPoint) -> CGPoint in
+            var p1 = p.scaled(to: trueBufferSize, inverse: true)
+            p1 = CGPoint(x: p1.x * scale, y: p1.y * scale)
+            p1 = CGPoint(x: p1.x + xAdd, y: p1.y + yAdd)
+            return p1
+        }
+        return observations.map { (observation) -> Detection in
+        Detection(original: observation,
+                         relocated: Polygon(points: [
+                             transform(observation.topLeft),
+                             transform(observation.topRight),
+                             transform(observation.bottomRight),
+                             transform(observation.bottomLeft),
+                         ])) }
+    }
+    
+    private func filterDetections(_ rectangles: [Detection]) -> [Detection] {
+        var rectangles = filterDetectionsByBounds(rectangles)
+        rectangles = filterDetectionsByInclusion(rectangles)
         return rectangles
     }
     
-    func filterRectanglesByInclusion(rectangles: [VNRectangleObservation]) -> [VNRectangleObservation] {
-        return rectangles
+    private func filterDetectionsByBounds(_ rectangles: [Detection]) -> [Detection] {
+        let bounds = rootLayer.bounds
+        let top = coverWeights.top * bounds.height
+        let bottom = (1 - coverWeights.bottom) * bounds.height
+        let left = coverWeights.left * bounds.width
+        let right = (1 - coverWeights.right) * bounds.width
+        let ratio = CGFloat(1.0 / 14.0)
+        return rectangles.filter { detection in
+            let rectangle = detection.relocated
+            return rectangle.points.filter { p in
+                let closeHorizontal =
+                    (abs(p.y - top) < bounds.height * ratio || abs(p.y - bottom) < bounds.height * ratio)
+                    && left - bounds.width * ratio < p.x && p.x < right + bounds.width * ratio
+                let closeVertical =
+                    (abs(p.x - left) < bounds.width * ratio || abs(p.x - right) < bounds.width * ratio)
+                        && top - bounds.height * ratio < p.y && p.y < bottom + bounds.height * ratio
+                return closeHorizontal || closeVertical
+            }.count == rectangle.points.count
+        }
     }
     
-    func drawRectangles(rectangles: [VNRectangleObservation]) {
+    // This is not used at the moment, but I will leave it here just in case
+    private func filterDetectionsByInclusion(_ rectangles: [Detection]) -> [Detection] {
+        let crossProduct = { (o: CGPoint, a: CGPoint, b: CGPoint) -> Double in
+            Double((a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x))
+        }
+        return rectangles.filter { detection in
+            let rectangle = detection.relocated
+            var keep = true
+            for otherDetection in rectangles {
+                let otherRectangle = otherDetection.relocated
+                if rectangle == otherRectangle {
+                    continue
+                }
+                var rectangleOutside = false
+                for point1 in rectangle.points {
+                    var pointOutside = false
+                    for i in 0..<4 {
+                        if crossProduct(otherRectangle.points[i], otherRectangle.points[(i + 1) % 4], point1) < 0 {
+                            pointOutside = true
+                            break
+                        }
+                    }
+                    if pointOutside {
+                        rectangleOutside = true
+                        break
+                    }
+                }
+                if !rectangleOutside {
+                    keep = false
+                    break
+                }
+            }
+            return keep
+        }
+    }
+
+    func drawRectangles(rectangles: [Detection]) {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         detectionOverlay.sublayers = nil
-        for rectangle in rectangles {
+        for rectangleDetection in rectangles {
+            let rectangle = rectangleDetection.relocated
             let linePath = UIBezierPath()
-            let points = [rectangle.bottomLeft, rectangle.topLeft, rectangle.topRight, rectangle.bottomRight]
-            linePath.move(to: points[3].scaled(to: bufferSize))
-            for point in points {
-                linePath.addLine(to: point.scaled(to: bufferSize))
+            linePath.move(to: rectangle.points.last!)
+            for point in rectangle.points {
+                linePath.addLine(to: point)
             }
             let line = CAShapeLayer()
             line.path = linePath.cgPath
@@ -146,7 +245,6 @@ class RectangleDetectionViewController: CameraViewController {
             line.strokeColor = UIColor.red.cgColor
             detectionOverlay.addSublayer(line)
         }
-//        self.updateOverlayGeometry()
         CATransaction.commit()
     }
     
@@ -170,4 +268,23 @@ class RectangleDetectionViewController: CameraViewController {
             return nil
         }
     }
+    
+    private func rotationAngle(orientation: UIDeviceOrientation) -> CGFloat {
+        switch orientation {
+        case .portrait: return CGFloat(.pi / 2.0)
+        case .portraitUpsideDown: return CGFloat(3.0 * .pi / 2.0)
+        case .landscapeRight: return CGFloat(0)
+        case .landscapeLeft: return CGFloat(1.0 * .pi)
+        default: return -1
+        }
+    }
+}
+
+struct Detection {
+    var original: VNRectangleObservation
+    var relocated: Polygon
+}
+
+struct Polygon: Equatable {
+    var points: [CGPoint]
 }
