@@ -220,15 +220,12 @@
                                     <action selector="openCamera:" destination="rkU-0K-bWm" eventType="touchUpInside" id="IB8-V0-nnh"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K41-69-M3n">
-                                <rect key="frame" x="150" y="300" width="100" height="100"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YEd-jx-LWZ">
+                                <rect key="frame" x="263" y="617" width="48" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="NoPhoto">
-                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                    <color key="titleShadowColor" cocoaTouchSystemColor="darkTextColor"/>
-                                </state>
+                                <state key="normal" image="TextToSpeech"/>
                                 <connections>
-                                    <action selector="testServerUpload:" destination="rkU-0K-bWm" eventType="touchUpInside" id="gdp-qm-zGF"/>
+                                    <action selector="textToSpeech:" destination="rkU-0K-bWm" eventType="touchUpInside" id="shO-Zh-duM"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -254,12 +251,12 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="lam-IP-L2J"/>
         <segue reference="ztC-w2-lVB"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="CameraIcon" width="48" height="48"/>
         <image name="CameraTakePhoto" width="150" height="150"/>
         <image name="NoPhoto" width="540" height="540"/>
+        <image name="TextToSpeech" width="48" height="48"/>
     </resources>
 </document>

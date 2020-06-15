@@ -1,8 +1,10 @@
 import UIKit
+import AVFoundation
 
 class PaintingViewController: UIViewController {
     //MARK: Variables
     var painting: Painting? = nil
+    private let speaker = AVSpeechSynthesizer()
     
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var paintingDescription: UITextView!
@@ -11,7 +13,7 @@ class PaintingViewController: UIViewController {
         super.viewDidLoad()
         if let painting = painting {
             photo.image = painting.photo
-//            paintingDescription.text = painting.description
+            paintingDescription.text = painting.description
         }
     }
     
@@ -22,17 +24,27 @@ class PaintingViewController: UIViewController {
         print(self.view.subviews[0])
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        if speaker.isSpeaking {
+            speaker.stopSpeaking(at: .immediate)
+        }
+    }
+    
     @IBAction func openCamera(_ sender: UIButton) {
-        print("Camera stuff I guess")
         self.performSegue(withIdentifier: "DetailsToCamera", sender: self)
     }
     
-
-    @IBAction func testServerUpload(_ sender: UIButton) {
-//        print("Test pressed")
-//        let network = APICalls()
-//        network.uploadImageToServer(image: UIImage(named: "Monalisa")!)
-//        network.getMoreFromMuseum(museumId: 1)
+    
+    @IBAction func textToSpeech(_ sender: UIButton) {
+        let dialogue = AVSpeechUtterance(string: painting!.description)
+        dialogue.rate = AVSpeechUtteranceDefaultSpeechRate
+        dialogue.voice = AVSpeechSynthesisVoice(identifier: "com.apple.ttsbundle.siri_female_en-GB_compact")
+        
+        if speaker.isSpeaking {
+            speaker.stopSpeaking(at: .immediate)
+        } else {
+            speaker.speak(dialogue)
+        }
     }
     
     /*
