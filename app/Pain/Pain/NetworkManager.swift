@@ -95,7 +95,11 @@ class APICalls {
     func downloadImage(imageName: String) -> UIImage {
         let url = URL(string: "https://pain.azurewebsites.net/user_content/\(imageName)")
         let data = try? Data(contentsOf: url!)
-        return UIImage(data: data!)!
+        var image = UIImage(named: "NoPhoto")
+        if data != nil {
+            image = UIImage(data: data!)
+        }
+        return image!
     }
     
     func createBody(boundary: String, data: Data) -> Data {

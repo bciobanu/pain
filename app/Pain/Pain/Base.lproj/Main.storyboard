@@ -231,6 +231,14 @@
                                     <action selector="testServerUpload:" destination="rkU-0K-bWm" eventType="touchUpInside" id="gdp-qm-zGF"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WuC-tl-mrq">
+                                <rect key="frame" x="50" y="426" width="100" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button" image="NoPhoto"/>
+                                <connections>
+                                    <action selector="testTextToSpeech:" destination="rkU-0K-bWm" eventType="touchUpInside" id="W5y-LQ-gaD"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>

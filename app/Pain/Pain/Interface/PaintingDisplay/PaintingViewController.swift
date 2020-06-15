@@ -1,4 +1,5 @@
 import UIKit
+import AVFoundation // for text to speech
 
 class PaintingViewController: UIViewController {
     //MARK: Variables
@@ -35,6 +36,15 @@ class PaintingViewController: UIViewController {
         network.getMoreFromMuseum(museumId: 1)
     }
     
+    let speaker = AVSpeechSynthesizer()
+    @IBAction func testTextToSpeech(_ sender: UIButton) {
+        let utterance = AVSpeechUtterance(string: "Unfortunately Apple does not list all of the supported language codes in the class documentation but mentions they need to be BCP-47 codes")
+        utterance.voice = AVSpeechSynthesisVoice(identifier: "com.apple.ttsbundle.siri_female_en-GB_compact")
+        utterance.rate = 0.5
+
+        let synthesizer = AVSpeechSynthesizer()
+        synthesizer.speak(utterance)
+    }
     /*
     // MARK: - Navigation
 
