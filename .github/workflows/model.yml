@@ -19,4 +19,6 @@ jobs:
       run: |
         conda install -c conda-forge flake8-black
         flake8 .
+        mkdir empty
+        python test_handler_unit.py
       working-directory: ${{env.working-directory}}
