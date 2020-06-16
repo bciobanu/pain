@@ -130,7 +130,7 @@ def main(args=None):
             cnt_not_better = 0
         else:
             cnt_not_better += 1
-            if cnt_not_better > 10:
+            if cnt_not_better > 29:
                 break
         save_checkpoint(
             {

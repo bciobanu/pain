@@ -40,8 +40,8 @@ class RectangleDetectionViewController: CameraViewController {
     internal var imagePixelBuffer: CVPixelBuffer!
     
     override func setupCapture() {
-        takePhotoButton.isEnabled = false
         super.setupCapture()
+        takePhotoButton.isEnabled = false
         self.setupLayers()
         startCapturing()
     }
@@ -67,7 +67,7 @@ class RectangleDetectionViewController: CameraViewController {
         detectionOverlay.frame = rootLayer.bounds
         rootLayer.insertSublayer(detectionOverlay, below: takePhotoButton.layer)
         
-        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverWeights = getCoverEdgeSizes(orientation: currentCameraOrientation)
         coverOverlay = CoverLayer()
         coverOverlay.fillColor = UIColor.black.cgColor.copy(alpha: 0.2)
         coverOverlay.setShape(bounds: rootLayer.bounds, weights: coverWeights)
@@ -75,12 +75,21 @@ class RectangleDetectionViewController: CameraViewController {
         rootLayer.insertSublayer(coverOverlay, below: takePhotoButton.layer)
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    private func orientationChange(size: CGSize) {
         detectionOverlay.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverWeights = getCoverEdgeSizes(orientation: currentCameraOrientation)
         coverOverlay.setShape(bounds: CGRect(x: 0, y: 0, width: size.width, height: size.height),
                               weights: coverWeights)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.orientationChange(size: rootLayer.bounds.size)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.orientationChange(size: size)
     }
     
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
@@ -129,7 +138,9 @@ class RectangleDetectionViewController: CameraViewController {
                     }
                     self.imageDetection = nil
                 }
-                self.drawRectangles(rectangles: filteredRectangles)
+                let color = (filteredRectangles.count == 1 ? UIColor.green : UIColor.red)
+                    .cgColor
+                self.drawRectangles(rectangles: filteredRectangles, color: color)
             }
         }
     }
@@ -142,7 +153,7 @@ class RectangleDetectionViewController: CameraViewController {
         // The buffer should be 640x480 (the value `size` width x height, the bigger dimension first)
         // If the device is in portrait, the bigger dimension will be actually the height (the height and width are swapped)
         var trueBufferSize = bufferSize;
-        if UIDevice.current.orientation.isPortrait {
+        if currentCameraOrientation.isPortrait {
             trueBufferSize = CGSize(width: bufferSize.height, height: bufferSize.width)
         }
         
@@ -240,7 +251,7 @@ class RectangleDetectionViewController: CameraViewController {
         }
     }
 
-    func drawRectangles(rectangles: [Detection]) {
+    func drawRectangles(rectangles: [Detection], color: CGColor) {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         detectionOverlay.sublayers = nil
@@ -253,9 +264,8 @@ class RectangleDetectionViewController: CameraViewController {
             }
             let line = CAShapeLayer()
             line.path = linePath.cgPath
-            line.fillColor = nil
-            line.opacity = 1.0
-            line.strokeColor = UIColor.red.cgColor
+            line.fillColor = color
+            line.opacity = 0.2
             detectionOverlay.addSublayer(line)
         }
         CATransaction.commit()
@@ -302,7 +312,10 @@ class RectangleDetectionViewController: CameraViewController {
             guard let paintingTableController = segue.destination as? PaintingTableViewController else {
                 fatalError("Unexpected segue destination: \(segue.destination)")
             }
-            guard let cgImage = cutAndSkew(pixelBuffer: self.imagePixelBuffer, rect: self.imageDetection!.original) else {
+            guard let imageDetection = self.imageDetection else {
+                return
+            }
+            guard let cgImage = cutAndSkew(pixelBuffer: self.imagePixelBuffer, rect: imageDetection.original) else {
                 fatalError("Could not create cgImage")
             }
             let uiImage = UIImage(cgImage: cgImage)

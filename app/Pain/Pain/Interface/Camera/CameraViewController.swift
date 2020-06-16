@@ -15,6 +15,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         autoreleaseFrequency: .workItem)
     internal var previewLayer: AVCaptureVideoPreviewLayer!
     internal var bufferSize: CGSize = .zero
+    internal var currentCameraOrientation: UIDeviceOrientation!
     
     // MARK: Animation
     internal var rootLayer: CALayer!
@@ -34,6 +35,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        currentCameraOrientation = UIDevice.current.orientation
         self.setupCapture()
     }
     
@@ -94,8 +96,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         rootLayer.insertSublayer(previewLayer, below: takePhotoButton.layer)
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    private func orientationChange(size: CGSize) {
         previewLayer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         let deviceOrientation = UIDevice.current.orientation
         
@@ -108,6 +109,16 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         }
         
         videoPreviewLayerConnection.videoOrientation = newVideoOrientation
+        currentCameraOrientation = deviceOrientation
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.orientationChange(size: rootLayer.bounds.size)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.orientationChange(size: size)
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput: CMSampleBuffer,
@@ -131,7 +142,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
     
     public func exifOrientationFromDeviceOrientation() -> CGImagePropertyOrientation {
-        let curDeviceOrientation = UIDevice.current.orientation
+        let curDeviceOrientation: UIDeviceOrientation = currentCameraOrientation
         let exifOrientation: CGImagePropertyOrientation
         
         switch curDeviceOrientation {
@@ -144,7 +155,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         case UIDeviceOrientation.portrait:            // Device oriented vertically, home button on the bottom
             exifOrientation = .right
         default:
-            exifOrientation = .up
+            exifOrientation = .right
         }
         return exifOrientation
     }
