@@ -5,6 +5,7 @@ class PaintingTableViewController: UITableViewController {
     
     // MARK: Properties
     var paintings: [Painting] = []
+    var fromDetection = false
     
     override var prefersStatusBarHidden: Bool {
         false
@@ -18,26 +19,7 @@ class PaintingTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Results"
-        
-//        let button = UIButton(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width - 96, y: UIScreen.main.bounds.height - 96), size: CGSize(width: 96, height: 96)))
-//        button.backgroundColor = UIColor.white
-//        button.addTarget(self, action: #selector(openCamera), for: .touchUpInside)
-//
-//        self.view.addSubview(button)
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-//        loadSamplePaintings()
     }
-    
-//    @objc
-//    func openCamera(sender: UIButton!) {
-//        print("Button tapped")
-//        self.performSegue(withIdentifier: "ListToCamera", sender: self)
-//    }
     
     // MARK: - Table view data source
 
@@ -115,6 +97,7 @@ class PaintingTableViewController: UITableViewController {
                 fatalError("Unexpected cell: \(selectedPaintingCell)")
             }
             let selectedPainting = paintings[indexPath.row]
+            paintingViewController.fromDetection = self.fromDetection
             paintingViewController.painting = selectedPainting
         default:
             print(segue.identifier ?? "<nil>")

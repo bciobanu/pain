@@ -13,7 +13,9 @@ class APICalls {
         let imageData = image.jpegData(compressionQuality: 1.0)
         
         if (imageData == nil) {
-            callback(nil, "Invalid image")
+            DispatchQueue.main.async {
+                callback(nil, "Invalid image")
+            }
         }
         
         let body = createBody(boundary: boundary, data: imageData!)
@@ -24,14 +26,18 @@ class APICalls {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error took place \(error)")
-                callback(nil, "Http error")
+                DispatchQueue.main.async {
+                    callback(nil, "Http error")
+                }
                 return
             }
      
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                 print("Error with the response, unexpected status code: \(String(describing: response))")
-                callback(nil, "Http response error")
+                DispatchQueue.main.async {
+                    callback(nil, "Http response error")
+                }
                 return
             }
 
@@ -46,7 +52,9 @@ class APICalls {
                 }
             } catch let error {
                 print("Failed to load: \(error.localizedDescription)")
-                callback(nil, "JSON serialization error")
+                DispatchQueue.main.async {
+                    callback(nil, "JSON serialization error")
+                }
             }
         }
         
@@ -61,13 +69,17 @@ class APICalls {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error took place \(error)")
-                callback(nil, "Http error")
+                DispatchQueue.main.async {
+                    callback(nil, "Http error")
+                }
                 return
             }
     
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
                 print("Error with the response, unexpected status code: \(String(describing: response))")
-                callback(nil, "Http response error")
+                DispatchQueue.main.async {
+                    callback(nil, "Http response error")
+                }
                 return
             }
 
@@ -82,7 +94,9 @@ class APICalls {
                 }
             } catch let error {
                 print("Failed to load: \(error.localizedDescription)")
-                callback(nil, "JSON serialization error")
+                DispatchQueue.main.async {
+                    callback(nil, "JSON serialization error")
+                }
             }
         }
        

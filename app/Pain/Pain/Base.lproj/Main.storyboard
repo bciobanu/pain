@@ -238,10 +238,11 @@
                                     <barButtonItem title="Item" image="camera" catalog="system" id="zHk-sZ-WHW" userLabel="Photo">
                                         <connections>
                                             <action selector="openCamera:" destination="rkU-0K-bWm" id="2gz-ul-rby"/>
+                                            <segue destination="uT9-dC-FPg" kind="unwind" identifier="BackToCamera" unwindAction="backToCameraActionWithUnwindSegue:" id="iIq-O7-Gu9"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="25l-5y-AEz"/>
-                                    <barButtonItem title="VIsit Museum" id="K0L-RW-N0r" userLabel="More">
+                                    <barButtonItem title="Visit Museum" id="K0L-RW-N0r" userLabel="More">
                                         <connections>
                                             <action selector="visitMuseum:" destination="rkU-0K-bWm" id="9nu-bT-qI7"/>
                                         </connections>
@@ -271,18 +272,19 @@
                     <connections>
                         <outlet property="paintingDescription" destination="TNo-ff-8qa" id="vnL-OB-z3L"/>
                         <outlet property="photo" destination="y1s-Qq-pP7" id="3kg-x9-SKi"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="DetailsToCamera" id="ztC-w2-lVB"/>
+                        <outlet property="visitMuseumButton" destination="K0L-RW-N0r" id="Xks-wc-TBz"/>
                         <segue destination="5Au-cH-DqW" kind="show" identifier="ShowMoreFromMuseum" id="821-io-xps"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RvN-6j-KUk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="uT9-dC-FPg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2757.5999999999999" y="86.806596701649184"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="821-io-xps"/>
-        <segue reference="ztC-w2-lVB"/>
+        <segue reference="lTa-gg-1vk"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="CameraTakePhoto" width="150" height="150"/>

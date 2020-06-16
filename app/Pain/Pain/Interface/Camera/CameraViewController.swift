@@ -88,8 +88,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         previewLayer.videoGravity = .resizeAspectFill
         rootLayer = previewView.layer
         previewLayer.frame = rootLayer.bounds
-        print(UIDevice.current.orientation)
-        print(rootLayer.bounds)
         if let orientation = AVCaptureVideoOrientation(deviceOrientation: UIDevice.current.orientation) {
             previewLayer.connection?.videoOrientation = orientation
         }

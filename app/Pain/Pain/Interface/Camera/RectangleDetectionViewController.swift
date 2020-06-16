@@ -306,6 +306,7 @@ class RectangleDetectionViewController: CameraViewController {
                 fatalError("Could not create cgImage")
             }
             let uiImage = UIImage(cgImage: cgImage)
+            paintingTableController.fromDetection = true
             api.uploadImageToServer(image: uiImage) { (paintings, err) in
                 if let paintings = paintings {
                     paintingTableController.paintings = paintings
@@ -316,6 +317,10 @@ class RectangleDetectionViewController: CameraViewController {
             print(segue.identifier ?? "<nil>")
             fatalError("Unexpected transition")
         }
+    }
+    
+    @IBAction func backToCameraAction(unwindSegue: UIStoryboardSegue) {
+        
     }
 }
 

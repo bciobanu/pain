@@ -4,14 +4,22 @@ import AVFoundation
 class PaintingViewController: UIViewController {
     //MARK: Variables
     var painting: Painting? = nil
+    var fromDetection = false
+
     private let speaker = AVSpeechSynthesizer()
     private let api = APICalls()
+
+    @IBOutlet weak var visitMuseumButton: UIBarButtonItem!
     
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var paintingDescription: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if !fromDetection {
+            visitMuseumButton.isEnabled = false
+            visitMuseumButton.title = ""
+        }
         if let painting = painting {
             photo.image = painting.photo
             paintingDescription.text = painting.description
@@ -20,9 +28,6 @@ class PaintingViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print(paintingDescription.text)
-        print(self.view.subviews[0].subviews[0])
-        print(self.view.subviews[0])
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,7 +73,7 @@ class PaintingViewController: UIViewController {
                     paintingTableController.tableView.reloadData()
                 }
             }
-        case "DetailsToCamera":
+        case "BackToCamera":
             break
         default:
             print(segue.identifier ?? "<nil>")
