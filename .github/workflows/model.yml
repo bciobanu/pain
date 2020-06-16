@@ -17,6 +17,7 @@ jobs:
       uses: s-weigand/setup-conda@v1
     - name: Lint with flake8
       run: |
+        pip install -r requirements.txt
         conda install -c conda-forge flake8-black
         flake8 .
         mkdir empty
