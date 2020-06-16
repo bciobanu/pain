@@ -312,7 +312,10 @@ class RectangleDetectionViewController: CameraViewController {
             guard let paintingTableController = segue.destination as? PaintingTableViewController else {
                 fatalError("Unexpected segue destination: \(segue.destination)")
             }
-            guard let cgImage = cutAndSkew(pixelBuffer: self.imagePixelBuffer, rect: self.imageDetection!.original) else {
+            guard let imageDetection = self.imageDetection else {
+                return
+            }
+            guard let cgImage = cutAndSkew(pixelBuffer: self.imagePixelBuffer, rect: imageDetection.original) else {
                 fatalError("Could not create cgImage")
             }
             let uiImage = UIImage(cgImage: cgImage)
