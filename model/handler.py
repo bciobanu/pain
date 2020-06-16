@@ -1,7 +1,7 @@
-import ssl
 import logging
 import ntpath
 import os
+import ssl
 from collections import Counter, deque
 
 import numpy as np
@@ -25,6 +25,7 @@ CENTER_CROP_ALEXNET = 224
 
 model = None
 alexnet = None
+load_done = False
 is_cuda_available = torch.cuda.is_available()
 device = torch.device("cuda" if is_cuda_available else "cpu")
 logger.info("Using GPU: " + str(is_cuda_available))
@@ -43,10 +44,9 @@ class Identity(nn.Module):
         return x
 
 
-def generate_kdtree_(net, image_folder, center_crop, num_workers=4):
+def generate_kdtree_(net, image_loader):
     global filenames
 
-    image_loader = load_data(image_folder, num_workers, center_crop=center_crop)
     with torch.no_grad():
         predictions = [
             (pth, net(img.to(device))[0].cpu().numpy().flatten(),)
@@ -76,7 +76,12 @@ def load(image_folder, model_path="./model_best.pth", num_workers=4):
     global index_model
     global index_alexnet
     global index_alexnet_sizes
+    global load_done
 
+    image_loader = load_data(image_folder, num_workers, center_crop=CENTER_CROP_MODEL)
+    if len(image_loader) == 0:
+        logger.warning(f"no images in folder {image_folder}")
+        return  # if no images present, abort load
     model = Autoencoder().to(device)
     if os.path.isfile(model_path):
         logger.info("=> loading checkpoint '{}'".format(model_path))
@@ -85,21 +90,14 @@ def load(image_folder, model_path="./model_best.pth", num_workers=4):
         logger.info("=> loaded checkpoint")
     else:
         logger.error("no checkpoint found at '{}'".format(model_path))
-    index_model = generate_kdtree_(
-        model.encoder, image_folder, CENTER_CROP_MODEL, num_workers=num_workers
-    )
+    index_model = generate_kdtree_(model.encoder, image_loader)
 
     alexnet = models.alexnet(pretrained=True).to(device)
     assert alexnet
     alexnet.classifier[6] = Identity().to(device)
-    index_alexnet = deque(
-        [
-            generate_kdtree_(
-                alexnet, image_folder, CENTER_CROP_ALEXNET, num_workers=num_workers
-            )
-        ]
-    )
+    index_alexnet = deque([generate_kdtree_(alexnet, image_loader)])
     index_alexnet_sizes = deque([len(filenames)])
+    load_done = True
 
 
 def get_image_emb_(net, image_path, center_crop):
@@ -119,6 +117,12 @@ def add_alexnet_image(image_path):
     global index_alexnet
     global index_alexnet_sizes
     global filenames
+    global load_done
+
+    if not load_done:
+        # if first image added, try to load again
+        load(os.path.dirname(image_path))
+        return
 
     embedding = get_image_emb_(alexnet, image_path, CENTER_CROP_ALEXNET)
     feature_length = len(embedding)
@@ -191,6 +195,11 @@ def predict_(image_path, top_n=5):
 
 
 def predict(image_path, top_n=5):
+    global load_done
+
+    if not load_done:
+        # no images, cannot make predictions
+        return []
     best_res = predict_(image_path, top_n)
     best_res = [t[0] for t in best_res]
     return best_res
