@@ -138,7 +138,9 @@ class RectangleDetectionViewController: CameraViewController {
                     }
                     self.imageDetection = nil
                 }
-                self.drawRectangles(rectangles: filteredRectangles)
+                let color = (filteredRectangles.count == 1 ? UIColor.green : UIColor.red)
+                    .cgColor
+                self.drawRectangles(rectangles: filteredRectangles, color: color)
             }
         }
     }
@@ -249,7 +251,7 @@ class RectangleDetectionViewController: CameraViewController {
         }
     }
 
-    func drawRectangles(rectangles: [Detection]) {
+    func drawRectangles(rectangles: [Detection], color: CGColor) {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         detectionOverlay.sublayers = nil
@@ -262,9 +264,8 @@ class RectangleDetectionViewController: CameraViewController {
             }
             let line = CAShapeLayer()
             line.path = linePath.cgPath
-            line.fillColor = nil
-            line.opacity = 1.0
-            line.strokeColor = UIColor.red.cgColor
+            line.fillColor = color
+            line.opacity = 0.2
             detectionOverlay.addSublayer(line)
         }
         CATransaction.commit()
