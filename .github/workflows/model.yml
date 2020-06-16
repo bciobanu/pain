@@ -17,9 +17,12 @@ jobs:
       uses: s-weigand/setup-conda@v1
     - name: Lint with flake8
       run: |
-        pip install -r requirements.txt
         conda install -c conda-forge flake8-black
         flake8 .
+      working-directory: ${{env.working-directory}}
+    - name: Run tests
+      run: |
+        pip install -r requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
         mkdir empty
         python test_handler_unit.py
       working-directory: ${{env.working-directory}}
