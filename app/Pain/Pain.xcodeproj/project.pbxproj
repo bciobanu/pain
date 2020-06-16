@@ -450,14 +450,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Pain/Pain.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ZTSWCXY5N7;
+				DEVELOPMENT_TEAM = N8ZCAFNF5F;
 				INFOPLIST_FILE = Pain/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.andreiinet.Pain;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fmanghiuc.Pain;
 				PRODUCT_NAME = Pain;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -470,14 +470,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Pain/Pain.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ZTSWCXY5N7;
+				DEVELOPMENT_TEAM = N8ZCAFNF5F;
 				INFOPLIST_FILE = Pain/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.andreiinet.Pain;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fmanghiuc.Pain;
 				PRODUCT_NAME = Pain;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

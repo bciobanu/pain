@@ -10,7 +10,7 @@ class APICalls {
         let boundary = "Boundary-\(NSUUID().uuidString)"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
-        let imageData = image.jpegData(compressionQuality: 1.0)
+        let imageData = image.jpegData(compressionQuality: 0.7)
         
         if (imageData == nil) {
             DispatchQueue.main.async {
@@ -42,10 +42,20 @@ class APICalls {
             }
 
             do {
+                let jsonResult = try JSONSerialization.jsonObject(with: data!, options: []) as! [Dictionary<String, Any>]
                 var paintings = [Painting]()
-                let jsonResult = try JSONSerialization.jsonObject(with: data!, options: [])
-                for json in jsonResult as! [Dictionary<String, Any>] {
-                    paintings.append(self.getPaintingFromJson(json: json))
+                var images = [UIImage](repeating: UIImage(named: "NoPhoto")!, count: jsonResult.count)
+                let group = DispatchGroup()
+                for (i, json) in jsonResult.enumerated() {
+                    group.enter()
+                    self.downloadImage(imageName: json["image_path"] as! String) { (image) in
+                        images[i] = image
+                        group.leave()
+                    }
+                }
+                group.wait()
+                for (i, json) in jsonResult.enumerated() {
+                    paintings.append(self.getPaintingFromJson(json: json, image: images[i]))
                 }
                 DispatchQueue.main.async {
                     callback(paintings, nil)
@@ -84,10 +94,20 @@ class APICalls {
             }
 
             do {
+                let jsonResult = try JSONSerialization.jsonObject(with: data!, options: []) as! [Dictionary<String, Any>]
                 var paintings = [Painting]()
-                let jsonResult = try JSONSerialization.jsonObject(with: data!, options: [])
-                for json in jsonResult as! [Dictionary<String, Any>] {
-                    paintings.append(self.getPaintingFromJson(json: json))
+                var images = [UIImage](repeating: UIImage(named: "NoPhoto")!, count: jsonResult.count)
+                let group = DispatchGroup()
+                for (i, json) in jsonResult.enumerated() {
+                    group.enter()
+                    self.downloadImage(imageName: json["image_path"] as! String) { (image) in
+                        images[i] = image
+                        group.leave()
+                    }
+                }
+                group.wait()
+                for (i, json) in jsonResult.enumerated() {
+                    paintings.append(self.getPaintingFromJson(json: json, image: images[i]))
                 }
                 DispatchQueue.main.async {
                     callback(paintings, nil)
@@ -103,8 +123,8 @@ class APICalls {
         task.resume()
     }
     
-    func getPaintingFromJson(json: Dictionary<String, Any>) -> Painting {
-        let photo: UIImage? = self.downloadImage(imageName: json["image_path"] as! String)
+    func getPaintingFromJson(json: Dictionary<String, Any>, image: UIImage) -> Painting {
+        let photo: UIImage = image
         let title: String = json["name"] as! String
         let description: String = json["description"] as! String
         let artist: String = json["artist"] as! String
@@ -114,10 +134,14 @@ class APICalls {
         return Painting(photo: photo, title: title, description: description, artist: artist, medium: medium, museum: museum)
     }
     
-    func downloadImage(imageName: String) -> UIImage {
+    func downloadImage(imageName: String, callback: @escaping (UIImage) -> Void) {
         let url = URL(string: "https://pain.azurewebsites.net/user_content/\(imageName)")
-        let data = try? Data(contentsOf: url!)
-        return UIImage(data: data!)!
+        DispatchQueue.global().async {
+            let data = try? Data(contentsOf: url!)
+            DispatchQueue.main.async {
+                callback(UIImage(data: data!)!)
+            }
+        }
     }
     
     func createBody(boundary: String, data: Data) -> Data {
