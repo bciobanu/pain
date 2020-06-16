@@ -40,8 +40,8 @@ class RectangleDetectionViewController: CameraViewController {
     internal var imagePixelBuffer: CVPixelBuffer!
     
     override func setupCapture() {
-        takePhotoButton.isEnabled = false
         super.setupCapture()
+        takePhotoButton.isEnabled = false
         self.setupLayers()
         startCapturing()
     }
@@ -67,7 +67,7 @@ class RectangleDetectionViewController: CameraViewController {
         detectionOverlay.frame = rootLayer.bounds
         rootLayer.insertSublayer(detectionOverlay, below: takePhotoButton.layer)
         
-        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverWeights = getCoverEdgeSizes(orientation: currentCameraOrientation)
         coverOverlay = CoverLayer()
         coverOverlay.fillColor = UIColor.black.cgColor.copy(alpha: 0.2)
         coverOverlay.setShape(bounds: rootLayer.bounds, weights: coverWeights)
@@ -75,12 +75,21 @@ class RectangleDetectionViewController: CameraViewController {
         rootLayer.insertSublayer(coverOverlay, below: takePhotoButton.layer)
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    private func orientationChange(size: CGSize) {
         detectionOverlay.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        coverWeights = getCoverEdgeSizes(orientation: UIDevice.current.orientation)
+        coverWeights = getCoverEdgeSizes(orientation: currentCameraOrientation)
         coverOverlay.setShape(bounds: CGRect(x: 0, y: 0, width: size.width, height: size.height),
                               weights: coverWeights)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.orientationChange(size: rootLayer.bounds.size)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.orientationChange(size: size)
     }
     
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
@@ -142,7 +151,7 @@ class RectangleDetectionViewController: CameraViewController {
         // The buffer should be 640x480 (the value `size` width x height, the bigger dimension first)
         // If the device is in portrait, the bigger dimension will be actually the height (the height and width are swapped)
         var trueBufferSize = bufferSize;
-        if UIDevice.current.orientation.isPortrait {
+        if currentCameraOrientation.isPortrait {
             trueBufferSize = CGSize(width: bufferSize.height, height: bufferSize.width)
         }
         
