@@ -80,7 +80,7 @@ def load(image_folder, model_path="./model_best.pth", num_workers=4):
 
     image_loader = load_data(image_folder, num_workers, center_crop=CENTER_CROP_MODEL)
     if len(image_loader) == 0:
-        logger.warning(f"no images in folder {image_folder}")
+        logger.warning("no images in folder {}".format(image_folder))
         return  # if no images present, abort load
     model = Autoencoder().to(device)
     if os.path.isfile(model_path):
