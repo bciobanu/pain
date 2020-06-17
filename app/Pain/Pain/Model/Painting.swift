@@ -7,13 +7,15 @@ class Painting {
     var artist: String
     var medium: String
     var museum: Int
+    var year: String
     
-    init(photo: UIImage?, title: String, description: String, artist: String, medium: String, museum: Int) {
+    init(photo: UIImage?, title: String, description: String, artist: String, medium: String, museum: Int, year: String) {
         self.photo = photo
         self.title = title
         self.description = description
         self.artist = artist
         self.medium = medium
         self.museum = museum
+        self.year = year
     }
 }

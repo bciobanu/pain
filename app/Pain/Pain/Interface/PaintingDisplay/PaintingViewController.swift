@@ -22,7 +22,24 @@ class PaintingViewController: UIViewController {
         }
         if let painting = painting {
             photo.image = painting.photo
-            paintingDescription.text = painting.description
+            
+            var description = painting.title + "\n"
+            description += painting.artist + ", "
+            description += String(painting.year) + "\n"
+            description += painting.medium + "\n"
+            description += "\n    " + painting.description
+            
+            let attributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor(named: "customFontColor")!,
+                .font: UIFont.systemFont(ofSize: 14)
+            ]
+            
+            let titleLocation = 0
+            let artistLocation = titleLocation + 1 + painting.title.count
+            let attributedString = NSMutableAttributedString(string: description, attributes: attributes)
+            attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 16), range: NSRange(location: titleLocation, length: painting.title.count))
+            attributedString.addAttribute(.font, value: UIFont.italicSystemFont(ofSize: 14), range: NSRange(location: artistLocation, length: painting.artist.count))
+            paintingDescription.attributedText = attributedString
         }
     }
     
@@ -40,7 +57,7 @@ class PaintingViewController: UIViewController {
     }
     
     @IBAction func textToSpeech(_ sender: UIBarButtonItem) {
-        let dialogue = AVSpeechUtterance(string: painting!.description)
+        let dialogue = AVSpeechUtterance(string: paintingDescription.text)
         dialogue.rate = AVSpeechUtteranceDefaultSpeechRate
         dialogue.voice = AVSpeechSynthesisVoice(identifier: "com.apple.ttsbundle.siri_female_en-GB_compact")
         

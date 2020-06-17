@@ -106,9 +106,9 @@ class PaintingTableViewController: UITableViewController {
     }
 
     private func loadSamplePaintings() {
-        let painting1 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc", artist: "Leonardo da Vinci", medium: "Oil", museum: 1)
-        let painting2 = Painting(photo: nil, title: "Monalisa", description: "Etc etc etc", artist: "Leonardo da Vinci", medium: "Oil", museum: 1)
-        let painting3 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc ", artist: "Leonardo da Vinci", medium: "Oil", museum: 1)
+        let painting1 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc", artist: "Leonardo da Vinci", medium: "Oil", museum: 1, year: "1898")
+        let painting2 = Painting(photo: nil, title: "Monalisa", description: "Etc etc etc", artist: "Leonardo da Vinci", medium: "Oil", museum: 1, year: "1989")
+        let painting3 = Painting(photo: UIImage(named: "Monalisa"), title: "Monalisa", description: "Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc Etc etc etc ", artist: "Leonardo da Vinci", medium: "Oil", museum: 1, year: "1569")
         paintings = [painting1, painting2, painting3]
     }
 }

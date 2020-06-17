@@ -131,7 +131,14 @@ class APICalls {
         let medium: String = json["medium"] as! String
         let museum: Int = json["museum"] as! Int
         
-        return Painting(photo: photo, title: title, description: description, artist: artist, medium: medium, museum: museum)
+        let dateString: String = json["year"] as! String
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let dateObj = dateFormatter.date(from: dateString)
+        dateFormatter.dateFormat = "yyyy"
+        let year: String = dateFormatter.string(from: dateObj!)
+        
+        return Painting(photo: photo, title: title, description: description, artist: artist, medium: medium, museum: museum, year: year)
     }
     
     func downloadImage(imageName: String, callback: @escaping (UIImage) -> Void) {
