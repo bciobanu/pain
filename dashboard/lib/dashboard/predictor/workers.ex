@@ -8,22 +8,23 @@ defmodule Dashboard.Predictor.Workers do
   end
 
   def add_alexnet(image_path) do
-    map(fn pid ->
-      Logger.info("[#{inspect(pid)}] started adding #{image_path} to AlexNet.")
-      start_time = System.monotonic_time()
+    {:ok} =
+      map(fn pid ->
+        Logger.info("[#{inspect(pid)}] started adding #{image_path} to AlexNet.")
+        start_time = System.monotonic_time()
 
-      GenServer.call(pid, {:add_alexnet, image_path}, :infinity)
+        GenServer.call(pid, {:add_alexnet, image_path}, :infinity)
 
-      elapsed = System.monotonic_time() - start_time
+        elapsed = System.monotonic_time() - start_time
 
-      :telemetry.execute(
-        @telemetry_module ++ [:add_alexnet],
-        %{duration: elapsed},
-        %{pid: pid}
-      )
+        :telemetry.execute(
+          @telemetry_module ++ [:add_alexnet],
+          %{duration: elapsed},
+          %{pid: pid}
+        )
 
-      Logger.info("[#{inspect(pid)}] finished adding #{image_path} to AlexNet.")
-    end)
+        Logger.info("[#{inspect(pid)}] finished adding #{image_path} to AlexNet.")
+      end)
   end
 
   def predict(image_path) do
@@ -51,22 +52,23 @@ defmodule Dashboard.Predictor.Workers do
   end
 
   def reload() do
-    map(fn pid ->
-      Logger.info("[#{inspect(pid)}] started reloading.")
-      start_time = System.monotonic_time()
+    {:ok} =
+      map(fn pid ->
+        Logger.info("[#{inspect(pid)}] started reloading.")
+        start_time = System.monotonic_time()
 
-      GenServer.call(pid, :reload, :infinity)
+        GenServer.call(pid, :reload, :infinity)
 
-      elapsed = System.monotonic_time() - start_time
+        elapsed = System.monotonic_time() - start_time
 
-      :telemetry.execute(
-        @telemetry_module ++ [:reload],
-        %{duration: elapsed},
-        %{pid: pid}
-      )
+        :telemetry.execute(
+          @telemetry_module ++ [:reload],
+          %{duration: elapsed},
+          %{pid: pid}
+        )
 
-      Logger.info("[#{inspect(pid)}] finished reloading.")
-    end)
+        Logger.info("[#{inspect(pid)}] finished reloading.")
+      end)
   end
 
   def train() do
@@ -94,24 +96,37 @@ defmodule Dashboard.Predictor.Workers do
     reload()
   end
 
+  def get_all_workers() do
+    GenServer.call(:predictor, :get_all_workers)
+    |> Enum.map(fn {_, pid, _, _} -> pid end)
+  end
+
+  def map(_func, _remaining, _workers_applied, 0) do
+    Logger.error("Failed to run map")
+    {:error}
+  end
+
+  def map(_func, [], _workers_applied, _attempts) do
+    {:ok}
+  end
+
+  def map(func, [worker | remaining], workers_applied, attempts) do
+    try do
+      if worker not in workers_applied do
+        func.(worker)
+        map(func, remaining, [worker | workers_applied], attempts)
+      else
+        map(func, remaining, workers_applied, attempts)
+      end
+    catch
+      _ ->
+        Logger.error("#{attempts} - Retrying map")
+        Process.sleep(1000)
+        map(func, get_all_workers(), workers_applied, attempts - 1)
+    end
+  end
+
   def map(func) do
-    take_ownership = fn _index ->
-      pid = :poolboy.checkout(:predictor, true, :infinity)
-      {func.(pid), pid}
-    end
-
-    stream =
-      Task.async_stream(
-        1..num_workers(),
-        take_ownership,
-        timeout: :infinity
-      )
-
-    release_ownership = fn {:ok, {result, pid}} ->
-      :poolboy.checkin(:predictor, pid)
-      result
-    end
-
-    Enum.map(stream, release_ownership)
+    map(func, get_all_workers(), [], 2 * num_workers() + 1)
   end
 end
