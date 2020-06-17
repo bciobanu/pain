@@ -132,9 +132,11 @@ def add_alexnet_image(image_path):
     embs = [(len(filenames) - 1, embedding)]
     last = len(filenames) - 2
     while len(index_alexnet) > 0 and index_alexnet_sizes[-1] == len(embs):
+        curr_length = len(embs)
         first = last - len(embs) + 1
         for i in range(first, last + 1):
             embs.append((i, index_alexnet[-1].get_item_vector(i)))
+        last -= curr_length
         index_alexnet.pop()
         index_alexnet_sizes.pop()
 
