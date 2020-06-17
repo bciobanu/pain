@@ -7,6 +7,8 @@ class PaintingTableViewController: UITableViewController {
     var paintings: [Painting] = []
     var fromDetection = false
     
+    var activityIndicator: UIActivityIndicatorView?
+    
     override var prefersStatusBarHidden: Bool {
         false
     }
@@ -19,6 +21,35 @@ class PaintingTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Results"
+        if activityIndicator == nil {
+            activityIndicator = UIActivityIndicatorView()
+            activityIndicator!.startAnimating()
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator!)
+        }
+    }
+    
+    func setStatusFinished() {
+        if let activityIndicator = self.activityIndicator {
+            activityIndicator.stopAnimating()
+        } else {
+            activityIndicator = UIActivityIndicatorView()
+        }
+    }
+    
+    func setStatusError() {
+        if let activityIndicator = self.activityIndicator {
+            activityIndicator.stopAnimating()
+        } else {
+            activityIndicator = UIActivityIndicatorView()
+        }
+        let loadingItem = UIBarButtonItem()
+        loadingItem.tintColor = UIColor.red
+        if #available(iOS 13, *) {
+            loadingItem.image = UIImage(systemName: "exclamationmark")
+        } else {
+            loadingItem.title = "Error"
+        }
+        self.navigationItem.rightBarButtonItem = loadingItem
     }
     
     // MARK: - Table view data source
