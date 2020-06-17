@@ -76,19 +76,24 @@ defmodule DashboardWeb.PageController do
   def delete(conn, %{"id" => id}) do
     painting = Dashboard.Repo.get!(Dashboard.Painting, id)
 
-    case painting |> Dashboard.Repo.delete() do
-      {:ok, _painting} ->
-        painting.image_path
-        |> absolute_image_path
-        |> File.rm!()
+    try do
+      if painting.user_id != conn.assigns.current_user.id do
+        raise "Unauthorized"
+      end
 
-        conn
-        |> put_flash(:info, "Successfully deleted!")
-        |> redirect(to: Routes.page_path(conn, :index))
+      Dashboard.Repo.delete!(painting)
 
-      {:error, _changeset} ->
+      painting.image_path
+      |> absolute_image_path
+      |> File.rm()
+
+      conn
+      |> put_flash(:info, "Successfully deleted!")
+      |> redirect(to: Routes.page_path(conn, :index))
+    catch
+      _ ->
         conn
-        |> put_flash(:error, "There was an error deleting the painting.")
+        |> put_flash(:error, "You cannot delete this painting.")
     end
   end
 end
