@@ -88,6 +88,9 @@ class PaintingViewController: UIViewController {
                 if let paintings = paintings {
                     paintingTableController.paintings = paintings
                     paintingTableController.tableView.reloadData()
+                    paintingTableController.setStatusFinished()
+                } else {
+                    paintingTableController.setStatusError()
                 }
             }
         case "BackToCamera":

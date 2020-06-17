@@ -313,6 +313,7 @@ class RectangleDetectionViewController: CameraViewController {
                 fatalError("Unexpected segue destination: \(segue.destination)")
             }
             guard let imageDetection = self.imageDetection else {
+                paintingTableController.setStatusError()
                 return
             }
             guard let cgImage = cutAndSkew(pixelBuffer: self.imagePixelBuffer, rect: imageDetection.original) else {
@@ -324,6 +325,9 @@ class RectangleDetectionViewController: CameraViewController {
                 if let paintings = paintings {
                     paintingTableController.paintings = paintings
                     paintingTableController.tableView.reloadData()
+                    paintingTableController.setStatusFinished()
+                } else {
+                    paintingTableController.setStatusError()
                 }
             }
         default:
